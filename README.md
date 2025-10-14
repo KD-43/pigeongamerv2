@@ -1,0 +1,1 @@
+To deliver personalized game watchlists efficiently, this application will use an anonymous persistent user model, storing a unique client-side ID in Local Storage. This provides a seamless user experience without the overhead of a full authentication system. A future version could expand this by implementing one to allow users to sync watchlists across devices."
