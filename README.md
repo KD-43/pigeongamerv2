@@ -1,7 +1,29 @@
-# Big Picture
+# Game Deal Watchlist
 
-To deliver personalized game watchlists efficiently, this application will use an anonymous persistent user model, storing a unique client-side ID in Local Storage. This provides a seamless user experience without the overhead of a full authentication system. A future version could expand this by implementing one to allow users to sync watchlists across devices."
+A full-stack web application that allows users to track video game deals using the CheapShark API. The app supports anonymous users, persistent watchlists, and cached pricing data to handle external API rate limits.
 
-## Notes
+## Tech Stack
+- Frontend: React
+- Backend: Node.js, Express
+- Database: MongoDB
+- External API: CheapShark
 
-- For this project, I implemented anonymous user-scoped watchlists. When a user first visits, I generate a random UUID (no email/password needed) and store it in localStorage. That ID is passed to the backend with each request, and the watchlists are stored per-user in MongoDB. This let me demonstrate user-specific data, CRUD operations, and backend routing without collecting any personal information.
+## Features
+- Anonymous user tracking using UUIDs (no authentication required)
+- Create and manage multiple watchlists
+- Add and remove game deals from watchlists
+- Search games by title
+- Server-side caching with timed refresh to reduce API calls
+
+## Architecture Notes
+- RESTful API design for watchlist and deal management
+- Cached pricing data refreshed every 30 minutes to mitigate rate limiting
+- MongoDB used for persistent storage of users, watchlists, and deals
+
+## Status
+Core functionality is complete. Notifications and deployment are planned next.
+
+## Future Improvements
+- Price change notifications
+- Authentication support
+- Deployment and environment configuration
