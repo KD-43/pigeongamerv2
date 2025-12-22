@@ -49,21 +49,34 @@ export async function getDeals (params, signal) {
     return data;
 };
 
-export async function getDealById (dealId, signal) {
+export async function getDealById (dealId, signal, { forceRefresh = false } = {}) {
     if (!dealId) {
         throw new Error('dealId is required');
     };
 
-    const key = `deal:${dealId}`;
-    const cached = getCache(key);
-    if (cached) {
-        console.log('[DEALS CACHE] HIT for', dealId);
-        return cached;
-    };
+    let normalized = dealId;
 
-    console.log('[DEALS CACHE] MISS for', dealId);
+    try {
+        if (/%[0-9A-Fa-f{2}]/.test(dealId)) {
+            normalized = decodeURIComponent(dealId);
+        }
+    } catch {
+        normalized = dealId;
+    }
+
+    const key = `deal:${normalized}`;
+
+    if (!forceRefresh) {
+        const cached = getCache(key);
+        if (cached) {
+            console.log('[DEALS CACHE] HIT for', normalized);
+            return cached;
+        };
+    }
+
+    console.log('[DEALS CACHE] MISS for', normalized);
     const response = await http.get('/deals', {
-        params: { id: dealId },
+        params: { id: normalized },
         signal
     });
     
@@ -133,10 +146,21 @@ export async function searchDealsByTitle (title, signal) {
     );
 };
 
-export async function getCheapestDealForTitle (title, signal) {
+export async function getCheapestDealForTitle (title, signal, { forceRefresh = false } = {}) {
+    const t = (title ?? '').toString().trim();
+    if (!t) return null;
+
+    const normTitle = t.toLowerCase();
+    const key = `title:${normTitle}`;
+
+    if (!forceRefresh) {
+        const cached = getCache(key);
+        if (cached) return cached;
+    }
+    
     const deals = await getDeals(
         {
-            title,
+            title: t,
             onSale: 1,
             sortBy: 'Price',
             pageSize: 1,
@@ -150,12 +174,16 @@ export async function getCheapestDealForTitle (title, signal) {
         return null;
     };
 
-    return {
+    const result = {
         title: best.title,
         storeID: best.storeID,
         dealID: best.dealID,
         currentPrice: Number(best.salePrice),
         normalPrice: Number(best.normalPrice),
         redirectUrl: `https://www.cheapshark.com/redirect?dealID=${encodeURIComponent(best.dealID)}`,
-    }
+    };
+
+    setCache(key, result, DEAL_CACHE_TTL);
+
+    return result;
 };
