@@ -1,9 +1,10 @@
 import { useNavigate } from "react-router";
 import Watchlist from "../WatchlistComponent";
-import { Typography, CircularProgress, Box } from "@mui/material";
+import { Typography, CircularProgress, Box, Grid, useTheme } from "@mui/material";
 import ErrorRender from "./errorCodeRender";
 
 export default function RenderSingleWatchlist ({ watchlist, watchlistStatus, deleteCallbackStatus, deleteCallback }) {
+    const theme = useTheme();
     const navigate = useNavigate();
     const { watchlistLoading, watchlistError } = watchlistStatus;
 
@@ -25,7 +26,16 @@ export default function RenderSingleWatchlist ({ watchlist, watchlistStatus, del
 
     return (
         <>
-            <Typography variant='h4' fontWeight={'bold'} sx={{ mt: 6, color: 'primary.main'}}>{watchlist.name}</Typography>
+            <Typography variant='h3' fontWeight={'bold'} sx={{ mt: 6, color: 'black'}}>{watchlist.name}</Typography>
+            <Box sx={{ backgroundColor: theme.palette.tertiary.main, borderRadius: 40, height: 48, width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', px: 3, py: 2,  }}>
+                <Grid container spacing={1} sx={{}}>
+                    <Grid size={2} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body1" fontWeight={'900'}>TITLE</Typography></Grid>
+                    <Grid size={2} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body1" fontWeight={'900'}>PRICE</Typography></Grid>
+                    <Grid size={4} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body1" fontWeight={'900'}>LINKS</Typography></Grid>
+                    <Grid size={3} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body1" fontWeight={'900'}>ACTION</Typography></Grid>
+                    <Grid size={1}></Grid>
+                </Grid>
+            </Box>
             <Watchlist
                 items={watchlist.items}
                 actionLabel="View More"
