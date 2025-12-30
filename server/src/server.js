@@ -21,6 +21,11 @@ app.use(
 );
 app.use(rateLimiter);
 
+app.use((req, res, next) => {
+  console.log("[REQ]", req.method, req.originalUrl);
+  next();
+});
+
 app.use("/api/watchlists", watchlistsRoutes);
 app.use("/api/deals", dealsRoutes);
 

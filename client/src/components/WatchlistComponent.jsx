@@ -32,7 +32,7 @@ export default function Watchlist ({ title, items = [], actionLabel = 'View All'
         <Card variant="outlinedList" sx={{ 
             boxShadow: 'none',
             '&:hover': {
-            boxShadow: 'none',
+                boxShadow: 'none',
             },
             borderColor: theme.palette.tertiary.main, 
             borderWidth: '3px', 
@@ -65,21 +65,21 @@ export default function Watchlist ({ title, items = [], actionLabel = 'View All'
                                     color: theme.palette.background.default,
                                     // fontWeight: 'bold',
                                     '.itemDiscount': {
-                                    backgroundColor: theme.palette.background.default,
-                                    color: theme.palette.secondary.main,
-                                    boxShadow: `inset 0 0 0 2px ${theme.palette.secondary.main}`,
-                                    borderRadius: '40px',
+                                        backgroundColor: theme.palette.background.default,
+                                        color: theme.palette.secondary.main,
+                                        boxShadow: `inset 0 0 0 2px ${theme.palette.secondary.main}`,
+                                        borderRadius: '40px',
                                     },
                                     '.itemPrice': {
-                                    backgroundColor: theme.palette.background.default,
-                                    color: theme.palette.primary.main,
+                                        backgroundColor: theme.palette.background.default,
+                                        color: theme.palette.primary.main,
                                     },
 
                                 }
                                 : undefined,
                             })}
                         >
-                            <Grid container spacing={2} sx={{ justifyContent: 'space-between'}}>
+                            <Grid container spacing={2} sx={{ }}>
 
                                 <Grid size={2} sx={{
                                     // maxWidth: 128,
@@ -100,16 +100,15 @@ export default function Watchlist ({ title, items = [], actionLabel = 'View All'
                                     </Box>
                                 </Grid>
 
-                                <Grid size={1} sx={{ display: 'grid', placeItems: 'center', }}>
-                                    <RenderIcon icons={priceChangeIcons} status={item.priceChange} onHover={false} />
+                                <Grid size={4} sx={{ display: 'flex', gap: 1, }}>
+                                    <Button variant={'black'} size={'medium'} sx={{ whiteSpace: 'nowrap', flexWrap: 'nowrap', display: 'flex', gap: 1, alignItems: 'space-between', justifyContent: 'center'}}><Typography fontWeight={'900'} fontSize={'clamp(9px, 0.5vw, 12px)'}>Go to page</Typography><InfoOutline /> </Button>
+                                    <Button variant={'contained'} size={'medium'} sx={{ flexGrow: 1, whiteSpace: 'nowrap', display: 'flex', gap: 1, alignItems: 'space-between', justifyContent: 'center' }}>
+                                        <Typography fontWeight={'900'} fontSize={'clamp(9px, 0.5vw, 12px)'}>{item.storeID ? storeName(item.storeID) : '' }</Typography><OpenInNew sx={{}} />
+                                    </Button>
                                 </Grid>
 
-                                <Grid size={1} sx={{ flexGrow: 1, display: 'grid', placeItems: 'center' }}>
-                                    <Button variant={'black'} size={'medium'}>Go to page<InfoOutline /> </Button>
-                                </Grid>
+                                <Grid size={3} sx={{ flexGrow: 1, flexWrap: 'nowrap', }}>
 
-                                <Grid size={2} sx={{ flexGrow: 1, display: 'grid', placeItems: 'center' }}>
-                                    <Button variant={'contained'} size={'medium'}>{item.storeID ? storeName(item.storeID) : '' }<OpenInNew /></Button>
                                 </Grid>
 
                                 <Grid size={1} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
