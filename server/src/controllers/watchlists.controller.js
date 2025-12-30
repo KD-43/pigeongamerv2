@@ -2,6 +2,7 @@ import { sanitizeTitle } from "../utils/sanitize.js";
 import mongoose from "mongoose";
 import Watchlist from "../models/Watchlist.js";
 import { getCheapestDealForTitle, getDealById } from "../services/cheapshark.service.js";
+import { response } from "express";
 
 const MAX_WATCHLISTS_PER_USER = 10;
 const MAX_ITEMS_PER_WATCHLIST = 100;
@@ -17,6 +18,8 @@ export const getAllWatchlists = async (req, res, next) => {
 };
 
 export const getSpecificWatchlist = async (req, res, next) => {
+    console.log("[getSpecificWatchlist] HIT", req.originalUrl);
+
     try {
         const userId = req.anonUserId;
         const { id } = req.params;
@@ -40,7 +43,7 @@ export const getSpecificWatchlist = async (req, res, next) => {
         const now = new Date();
 
         const TRACKED_STALE_MS = 15 * 60 * 1000;
-        const CANDIDATE_STALE_MS = 30 * 60 * 1000;
+        const CANDIDATE_STALE_MS = 1 * 60 * 1000;
 
         const isStale = (d, staleMs) => {
             // console.log('[isStale] d:', d);
@@ -63,20 +66,21 @@ export const getSpecificWatchlist = async (req, res, next) => {
             // console.log('forceRefresh: ', forceRefresh);
 
             try {
-                const deal = await getDealById(item.dealID, req.signal, { forceRefresh });
-                if (!deal) return {
+                const response = await getDealById(item.dealID, req.signal, { forceRefresh });
+                if (!response) return {
                     dealID: item.dealID,
                     storeID: item.storeID ?? null,
                     currentPrice: null,
                     source: "tracked_missing",
                 };
+                const deal = response.gameInfo;
 
                 return {
                     dealID: item.dealID ?? null,
                     storeID: deal?.storeID ?? item.storeID ?? null,
                     currentPrice: 
-                        deal?.currentPrice !== null && deal?.currentPrice !== undefined 
-                        ? Number(deal?.currentPrice) 
+                        deal?.salePrice !== null && deal?.salePrice !== undefined 
+                        ? Number(deal?.salePrice) 
                         : null,
                     source: forceRefresh ? "tracked_forceRefresh" : 'tracked_cache',
                 };
@@ -92,9 +96,28 @@ export const getSpecificWatchlist = async (req, res, next) => {
         };
 
         const resolveCandidate = async (item) => {
+            console.log("[resolveCandidate] ENTER", {
+                title: item.title,
+                candidateSeenAt: item.candidateSeenAt,
+                candidateDealID: item.candidateDealID,
+            });
+
             const forceRefresh = isStale(item.candidateSeenAt, CANDIDATE_STALE_MS);
 
+            console.log("[resolveCandidate] STALE CHECK", {
+                title: item.title,
+                forceRefresh,
+                ageMs: item.candidateSeenAt
+                ? Date.now() - new Date(item.candidateSeenAt).getTime()
+                : null,
+            });
+
             if (!forceRefresh) {
+                console.log("[resolveCandidate] USING CACHE / SKIP FETCH", {
+                    title: item.title,
+                    candidateDealID: item.candidateDealID,
+                });
+
                 if (!item.candidateDealID) return null;
                 return {
                     dealID: item.candidateDealID ?? null,
@@ -104,19 +127,32 @@ export const getSpecificWatchlist = async (req, res, next) => {
                         ? Number(item.candidatePrice)
                         : null,
                     source: "candidate_cache",
+                    didFetch: false,
                     forceRefresh: false,
                 };
             };
 
+            console.log("[resolveCandidate] FORCE REFRESH → FETCH", {
+                title: item.title,
+            });
+
             try {
                 const cheapest = await getCheapestDealForTitle(item.title, req.signal, { forceRefresh });
+
+                console.log("[resolveCandidate] FETCH RESULT", {
+                    title: item.title,
+                    cheapest,
+                });
+
                 if (!cheapest) {
+                    console.log("[resolveCandidate] NO DEAL FOUND", { title: item.title });
                     return { 
                         dealID: null, 
                         storeID: null, 
                         currentPrice: null, 
                         source: "candidate_none",
                         forceRefresh: true,
+                        didFetch: true,
                     };
                 };
 
@@ -128,6 +164,7 @@ export const getSpecificWatchlist = async (req, res, next) => {
                         ? Number(cheapest.currentPrice) 
                         : null,
                     source: "candidate_refresh",
+                    didFetch: true,
                 }
             } catch (err) {
                 console.error(`[candidate] Error fetching cheapest deal for item title "${item.title}": `, err.message);
@@ -135,14 +172,19 @@ export const getSpecificWatchlist = async (req, res, next) => {
             }
         }
 
+        console.log("[getSpecificWatchlist] items length", items.length);
+
         const [ trackedResults, candidateResults ] = await Promise.all([
             Promise.all(items.map(resolveTracked)),
             Promise.all(items.map(resolveCandidate)),
         ])
 
+        // console.log('candidateResults: ', candidateResults);
+
         const responseItems = items.map((item, index) => {
             const tracked = trackedResults[index];
             const candidate = candidateResults[index];
+            console.log('[tracked]: ', tracked);
 
             const trackedPrice = tracked?.currentPrice ?? null;
             const lastSeenPrice = 
@@ -176,7 +218,7 @@ export const getSpecificWatchlist = async (req, res, next) => {
                     candidate.currentPrice !== null && candidate.currentPrice !== undefined 
                         ? Number(candidate.currentPrice)
                         : null;
-                item.candidateSeenAt = now;
+                if (candidate.didFetch) item.candidateSeenAt = now;
             }
 
             const candidatePrice = candidate?.currentPrice ?? null;
@@ -305,6 +347,10 @@ export const addItemToWatchlist = async (req, res, next) => {
             storeID: storeID || null,
             lastSeenPrice: null,
             lastSeenAt: null,
+            candidateDealID: null,
+            candidateStoreID: null,
+            candidatePrice: null,
+            candidateSeenAt: null,
         });
 
         const savedList = await list.save();
