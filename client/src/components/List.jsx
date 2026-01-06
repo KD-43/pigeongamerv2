@@ -4,14 +4,59 @@ import {
 } from '@mui/material';
 import { OpenInNew, Delete } from '@mui/icons-material';
 import apiConversion from '../util/apiDataConversion';
-import { use, useState } from 'react';
+import { useState } from 'react';
+import ErrorRender from './render/errorCodeRender';
+import LoadingRender from './render/loadingRender';
 
-export default function List({ title, items = [], actionLabel = 'View All', onAction, onItemClick, version }) {
+export default function List({ title, items = [], actionLabel = 'View All', onAction, onItemClick, version, itemsError, itemsLoading }) {
   const theme = useTheme();
   const primary = theme.palette.primary.main;
   const { freeOrNah, storeName, discountPercentage } = apiConversion();
   const [ isHovered, setIsHovered ] = useState(false);
   const navigate = useNavigate();
+
+  if (itemsError) {
+    return (
+      <Card variant="outlinedList" sx={{ 
+        boxShadow: 'none',
+        '&:hover': {
+          boxShadow: 'none',
+        },
+        borderColor: theme.palette.tertiary.main, 
+        borderWidth: '3px',
+        display: 'flex', 
+        flexGrow: '1', 
+        flexDirection: 'column', 
+        py: 2,
+        height: '100%',
+        justifyContent: 'center',
+
+      }}>
+
+        <ErrorRender sx={{ width: '100%', height: '100%', alignSelf: 'center' }} />
+      </Card>
+    )
+  }
+
+  if (itemsLoading) {
+    return (
+      <Card variant="outlinedList" sx={{ 
+        boxShadow: 'none',
+        '&:hover': {
+          boxShadow: 'none',
+        },
+        borderColor: theme.palette.tertiary.main, 
+        borderWidth: '3px',
+        display: 'flex', 
+        flexGrow: '1', 
+        flexDirection: 'column', 
+        py: 2
+
+      }}>
+        <LoadingRender sx={{ width: '100%', height: '100%', alignSelf: 'center' }}  />
+      </Card>
+    )
+  }
 
   switch (version) {
     case 'standard':

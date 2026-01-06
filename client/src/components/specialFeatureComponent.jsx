@@ -41,7 +41,7 @@ export default function SpecialFeature () {
         <Box sx={{ borderColor: theme.palette.primary.main, border: `4px solid ${theme.palette.primary.main}`, borderRadius: '42px', minHeight: '514px', overflow: 'hidden', py: { xs: 6, md: 10 } }}>
             <Grid container justifyContent={'center'} direction={'column'} alignItems={'center'}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, }}>
-                    <Typography variant='h3' fontWeight={'bold'} textAlign={'center'}
+                    <Typography variant='h3' fontWeight={'900'} textAlign={'center'}
                         sx={{
                             '& span.primary': {
                                 color: 'primary.main'

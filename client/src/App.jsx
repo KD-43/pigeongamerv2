@@ -9,6 +9,7 @@ import SpecificDeal from './pages/SpecificDeal_page';
 import SearchResults from './pages/SearchResults_page';
 import Watchlists from './pages/Watchlists_page';
 import SingleWatchlistPage from './pages/SingleWatchlist_page';
+import ViewMoreDeals from './pages/ViewMoreDeals_page';
 import ErrorPage from './pages/404_page';
 import { Routes, Route } from 'react-router';
 import ScrollToTop from './components/util/scrollToTop';
@@ -22,6 +23,7 @@ const App = () => {
         <Routes>
           <Route path='/' element={<HomePage />} />
           <Route path='/deals/details/:dealId'  element={<SpecificDeal />} />
+          <Route path='/deals/view-more/:dealsType'  element={<ViewMoreDeals />} />
           <Route path='/search/:query' element={<SearchResults />} />
           <Route path='/watchlists' element={<Watchlists />} />
           <Route path='/watchlists/:watchlistId' element={<SingleWatchlistPage />} />
