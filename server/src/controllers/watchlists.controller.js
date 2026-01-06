@@ -520,3 +520,59 @@ export const getWatchlistsSummary = async (req, res, next) => {
         next(err);
     }
 }
+
+export const replaceItemDeal = async (req, res, next) => {
+    try {
+        const userId = req.anonUserId;
+        const { id } = req.params;
+        const { gameID, candidate } = req.body;
+        if (!mongoose.isValidObjectId(id)) {
+            return res.status(400).json({ error: 'Invalid watchlist id' });
+        };
+
+        if (!gameID) {
+            return res.status(400).json({ error: 'gameID' });
+        };
+
+        if (!candidate) {
+            return res.status(400).json({ error: 'candidate missing' });
+        }
+
+        const nextDealID = decodeURIComponent(candidate.dealID);
+        const nextStoreID = candidate.storeID ?? null;
+        const nextPrice =
+        candidate.currentPrice !== null && candidate.currentPrice !== undefined
+            ? Number(candidate.currentPrice)
+            : null;
+
+        const list = await Watchlist.findOne({ _id: id, userId });
+        if (!list) return res.status(404).json({ error: "Watchlist not found" });
+
+        const item = list.items.find((i) => i.gameID === gameID);
+        if (!item) return res.status(404).json({ error: "Watchlist item not found" });
+
+        item.dealID = nextDealID;
+        item.storeID = nextStoreID;
+
+        item.lastSeenPrice = nextPrice;
+        item.lastSeenAt = new Date();
+
+        item.candidateDealID = null;
+        item.candidateStoreID = null;
+        item.candidatePrice = null;
+        item.candidateSeenAt = null;
+
+        await list.save();
+
+        return res.status(200).json({
+            gameID: item.gameID,
+            title: item.title,
+            storeID: item.storeID ?? null,
+            dealID: item.dealID ?? null,
+            lastSeenPrice: item.lastSeenPrice ?? null,
+            lastSeenAt: item.lastSeenAt ?? null,
+        });
+    } catch (err) {
+        next(err);
+    }
+}
