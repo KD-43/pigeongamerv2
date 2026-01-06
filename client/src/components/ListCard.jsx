@@ -91,7 +91,7 @@ export default function ListCardStack({ title, items = [], actionLabel = 'View A
       py: 2
 
     }}>
-      <CardHeader title={title} slotProps={{ title: { variant: 'h4', sx: { fontWeight: 'bold' } } }} sx={{ py: 2, color: primary }} />
+      <CardHeader title={title} slotProps={{ title: { variant: 'h4', sx: { fontWeight: '900' } } }} sx={{ py: 2, color: primary }} />
 
       <CardContent sx={{ width: '100%', pt: 1, pb: 1, px: 0, }}>
         <Stack

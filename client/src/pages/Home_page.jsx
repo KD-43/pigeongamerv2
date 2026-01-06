@@ -32,7 +32,7 @@ export default function HomePage () {
                             title="Trending Deals"
                             items={trendingDeals}
                             actionLabel="View More"
-                            onAction={() => console.log('View All clicked')}
+                            onAction={() => navigate(`/deals/view-more/trending`)}
                             onItemClick={(i) => navigate(`/deals/details/${trendingDeals[i].dealID}`)}
                             itemsLoading={trendingLoading}
                             itemsError={trendingError}
@@ -43,7 +43,7 @@ export default function HomePage () {
                             title="New Deals"
                             items={recentDeals}
                             actionLabel="View More"
-                            onAction={() => console.log('View All clicked')}
+                            onAction={() => navigate(`/deals/view-more/recent`)}
                             onItemClick={(i) => navigate(`/deals/details/${recentDeals[i].dealID}`)}
                             itemsLoading={recentLoading}
                             itemsError={recentError}
@@ -53,7 +53,7 @@ export default function HomePage () {
                 <SpecialFeature />
                 <Grid container spacing={8} justifyContent={'space-between'} sx={{ my: '160px', }}>
                     <Grid size={6}>
-                        <Typography variant="h3" fontWeight={'700'} color={'primary'} textAlign={'end'}>
+                        <Typography variant="h3" fontWeight={'900'} color={'primary'} textAlign={'end'}>
                             Have a title in mind? <br /> Look for it!
                         </Typography>
                     </Grid>
