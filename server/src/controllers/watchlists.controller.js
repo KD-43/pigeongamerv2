@@ -78,6 +78,7 @@ export const getSpecificWatchlist = async (req, res, next) => {
                 return {
                     dealID: item.dealID ?? null,
                     storeID: deal?.storeID ?? item.storeID ?? null,
+                    retailPrice: deal?.retailPrice ?? item.retailPrice ?? null,
                     currentPrice: 
                         deal?.salePrice !== null && deal?.salePrice !== undefined 
                         ? Number(deal?.salePrice) 
@@ -241,6 +242,7 @@ export const getSpecificWatchlist = async (req, res, next) => {
                 storeID: item.storeID ?? null,
                 dealID: item.dealID ?? null,
                 lastSeenPrice,
+                retailPrice: tracked.retailPrice,
                 currentPrice: trackedPrice,
                 priceChange,
                 delta,

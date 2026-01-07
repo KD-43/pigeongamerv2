@@ -19,7 +19,7 @@ export const theme = createTheme({
         },
         divider: '#DFDFDF',
         black: {
-            default: '#0e0f0fff',
+            default: '#0b0c0c',
         }
         
     },
@@ -35,6 +35,18 @@ export const theme = createTheme({
                                 backgroundColor: '#F1F1F1',
                                 color: '#D500F9',
                                 border: '1px solid #D500F9',
+                                borderRadius: '40px',
+                                fontWeight: 'bolder',
+                                
+                            },
+                            
+                        },
+                        { 
+                            props: { variant: 'outlined-gray' }, 
+                            style: {
+                                backgroundColor: '#F1F1F1',
+                                color: '#0b0c0c',
+                                border: '3px solid #DFDFDF',
                                 borderRadius: '40px',
                                 fontWeight: 'bolder',
                                 
@@ -63,7 +75,7 @@ export const theme = createTheme({
                         { 
                             props: { variant: 'black', size: 'large' }, 
                             style: {
-                                backgroundColor: '#0e0f0fff',
+                                backgroundColor: '#0b0c0c',
                                 color: '#F1F1F1',
                                 borderRadius: '40px',
                                 fontWeight: '900',
