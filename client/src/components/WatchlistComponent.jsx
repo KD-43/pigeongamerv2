@@ -4,7 +4,7 @@ import apiConversion from '../util/apiDataConversion';
 import {
   Card, CardHeader, CardContent, CardActions, Button, Divider, Stack, Box, alpha, darken, Typography, Grid, useTheme, IconButton, Modal
 } from '@mui/material';
-import { OpenInNew, Delete, InfoOutline, ArrowUpward, ArrowDownward, HorizontalRule, NewReleases} from '@mui/icons-material';
+import { OpenInNew, Delete, InfoOutline, ArrowUpward, ArrowDownward, HorizontalRule, NewReleases, Clear} from '@mui/icons-material';
 import RenderIcon from './render/renderIcons';
 import BasicModal from './util/basicModalComponent';
 
@@ -107,15 +107,23 @@ export default function Watchlist ({ title, items = [], actionLabel = 'View All'
                                         </Box>
                                     </Grid>
                                     <Grid size={4} sx={{ display: 'flex', gap: 1, }}>
-                                        <Button variant={'black'} size={'medium'} sx={{ whiteSpace: 'nowrap', flexWrap: 'nowrap', display: 'flex', gap: 1, alignItems: 'space-between', justifyContent: 'center'}}><Typography fontWeight={'900'} fontSize={'clamp(9px, 0.5vw, 12px)'}>Go to page</Typography><InfoOutline /> </Button>
+                                        <Button variant={'black'} size={'medium'} sx={{ whiteSpace: 'nowrap', flexWrap: 'nowrap', display: 'flex', gap: 1, alignItems: 'space-between', justifyContent: 'center'}}>
+                                            <Typography fontWeight={'900'} fontSize={'clamp(9px, 0.5vw, 12px)'}>
+                                                Go to page
+                                            </Typography>
+                                            <InfoOutline /> 
+                                        </Button>
                                         <Button variant={'contained'} size={'medium'} sx={{ flexGrow: 1, whiteSpace: 'nowrap', display: 'flex', gap: 1, alignItems: 'space-between', justifyContent: 'center' }}>
-                                            <Typography fontWeight={'900'} fontSize={'clamp(9px, 0.5vw, 12px)'}>{item.storeID ? storeName(item.storeID) : '' }</Typography><OpenInNew sx={{}} />
+                                            <Typography fontWeight={'900'} fontSize={'clamp(9px, 0.5vw, 12px)'}>
+                                                {item.storeID ? storeName(item.storeID) : '' }
+                                            </Typography>
+                                            <OpenInNew sx={{}} />
                                         </Button>
                                     </Grid>
-                                    <Grid size={3} sx={{ flexGrow: 1, flexWrap: 'nowrap', }}>
-                                        <Button onClick={() => handleModalOpen(i)} variant={'outlined-gray'} fullWidth size={'medium'} sx={{ flexGrow: 1, whiteSpace: 'nowrap', display: 'flex', gap: 1, alignItems: 'space-between', justifyContent: 'center' }}>
-                                            {item.ui.updateAvailable ? <Typography fontWeight={'900'} fontSize={'clamp(9px, 0.5vw, 12px)'}>New Deal</Typography> : '-'}
-                                        </Button>
+                                    <Grid size={3} sx={{ flexGrow: 1, flexWrap: 'nowrap', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                        { item.ui.updateAvailable ? <Button onClick={() => handleModalOpen(i)} variant={'outlined-gray'} fullWidth size={'medium'} sx={{ height: '100%', flexGrow: 1, whiteSpace: 'nowrap', display: 'flex', gap: 1, alignItems: 'space-between', justifyContent: 'center' }}>
+                                            <Typography fontWeight={'900'} fontSize={'clamp(9px, 0.5vw, 12px)'} color='primary.main'>New Deal</Typography>
+                                        </Button>: <Clear sx={{ color: 'tertiary.main'}} />}
                                     </Grid>
                                     <Grid size={1} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                         <IconButton onClick={() => deleteItem(item.gameID)}><Delete /></IconButton>

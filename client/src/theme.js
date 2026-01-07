@@ -54,6 +54,18 @@ export const theme = createTheme({
                             
                         },
                         { 
+                            props: { variant: 'outlined-primary' }, 
+                            style: {
+                                backgroundColor: '#F1F1F1',
+                                color: '#0b0c0c',
+                                border: '3px solid #009688',
+                                borderRadius: '40px',
+                                fontWeight: 'bolder',
+                                
+                            },
+                            
+                        },
+                        { 
                             props: { variant: 'contained' }, 
                             style: {
                                 backgroundColor: '#D500F9',
@@ -105,6 +117,32 @@ export const theme = createTheme({
                                 backgroundColor: '#DFDFDF',
                                 color: '#009688',
                                 borderRadius: '40px',
+                                fontWeight: '900',
+                                minHeight: 42,
+                                lineHeight: 1.75,
+                                paddingTop: 8,
+                                paddingBottom: 8,
+                            }
+                        },
+                        { 
+                            props: { variant: 'square-gray' }, 
+                            style: {
+                                backgroundColor: '#DFDFDF',
+                                color: '#009688',
+                                borderRadius: '10px',
+                                fontWeight: '900',
+                                minHeight: 42,
+                                lineHeight: 1.75,
+                                paddingTop: 8,
+                                paddingBottom: 8,
+                            }
+                        },
+                        { 
+                            props: { variant: 'square-secondary' }, 
+                            style: {
+                                backgroundColor: '#D500F9',
+                                color: '#F1F1F1',
+                                borderRadius: '10px',
                                 fontWeight: '900',
                                 minHeight: 42,
                                 lineHeight: 1.75,
