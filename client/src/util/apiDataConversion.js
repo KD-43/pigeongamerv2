@@ -13,7 +13,7 @@ export default function apiConversion () {
             case "1":
             return "Steam";
             case "2":
-            "GamersGate";
+            return "GamersGate";
             case "3":
             return "GreenManGaming";
             case "4":

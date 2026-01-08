@@ -17,7 +17,7 @@ const style = {
     p: 5,
 };
 
-export default function BasicModal({ isOpen, onClose, item }) {
+export default function BasicModal({ isOpen, onClose, item, replaceItem }) {
     if (!isOpen) return null;
     if (!item) return null;
     if (!item.candidate) return null;
@@ -38,6 +38,11 @@ export default function BasicModal({ isOpen, onClose, item }) {
 
     console.log(item ? item : '');
 
+    const replaceTrigger = () => {
+        replaceItem(trackedItem.gameID, candidateItem);
+        onClose();
+    };
+
 
     return (
         <div>
@@ -48,14 +53,14 @@ export default function BasicModal({ isOpen, onClose, item }) {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <Grid container spacing={1} direction={'column'} sx={{ width: '100%', height: '100%',}}>
-                        <Grid sx={{ width: '100%', flexGrow: 2, display: 'flex', flexDirection: 'column', alignItems: 'space-between' }}>
+                    <Grid container spacing={1} direction={'column'} sx={{ width: '100%', height: '100%', }}>
+                        <Grid sx={{ width: '100%', flexGrow: 2, display: 'flex', flexDirection: 'column', }}>
                             <Box>
                                 <Typography id="modal-modal-title" variant="h3" fontWeight={'900'} color='primary.main'>
                                     Price Changed!
                                 </Typography>
-                                <Typography id="modal-modal-description" variant='body1' sx={{ mt: 2 }}>
-                                    There is a <span style={{ textDecoration: 'underline'}}>cheaper deal</span> for <span style={{ fontWeight: 'bold' }}>{title}</span> at <span style={{ fontWeight: 'bold' }}>{newStore}</span> for <span style={{ color: theme.palette.primary.main, fontWeight: 'bold' }}>${candidatePrice}</span>
+                                <Typography id="modal-modal-description" variant='body1' sx={{ mt: 2, maxWidth: '50ch', }}>
+                                    There is a <span style={{ textDecoration: 'underline'}}>cheaper deal</span> for <span style={{ fontWeight: 'bold' }}>{title}</span> at <span style={{ fontWeight: 'bold' }}>{newStore}</span> for <span style={{ color: theme.palette.primary.main, fontWeight: 'bold' }}>{newPrice}</span>
                                 </Typography>
                             </Box>
                             <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center'}}>
@@ -64,50 +69,50 @@ export default function BasicModal({ isOpen, onClose, item }) {
                                 </Typography>
                             </Box>
                         </Grid>
-                        <Grid container direction={'column'} sx={{ width: '100%', height: 'auto', flexGrow: 7, }}>
+                        <Grid container direction={'column'} sx={{ width: '100%', height: 'auto', flexGrow: 5, }}>
                             <Grid size={12}>
                                 <Typography variant='h6' fontWeight={'bold'}>Current</Typography>
                             </Grid>
                             <Grid container size={4} sx={{ width: '100%', border: `3px solid ${theme.palette.tertiary.main}`, borderRadius: 5, px: 2, py: 3}}>
                                 <Grid size={4}><Typography variant='h5' fontWeight={'700'}>{currentStore}</Typography></Grid>
-                                <Grid size={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                <Grid size={4} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                     <Typography variant='h5' fontWeight={'700'}>
                                         {currentPrice}
                                     </Typography>
                                 </Grid>
-                                <Grid size={4} sx={{ display: 'flex', justifyContent: 'end' }}>
+                                <Grid size={4} sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
                                     <Typography variant='h5' fontWeight={'700'}>
                                         {currentDiscount}
                                     </Typography>
                                 </Grid>
                             </Grid>
-                            <Grid size={12} sx={{ display: 'flex', justifyContent: 'center', mt: 2, }}>
-                                <ArrowDownward />
+                            <Grid size={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 2, }}>
+                                <ArrowDownward fontSize='large' />
                             </Grid>
                             <Grid size={12}>
                                 <Typography variant='h6' color={'primary'} fontWeight={'bold'}>New</Typography>
                             </Grid>
-                            <Grid container size={4} sx={{ width: '100%', backgroundColor: 'primary.main', color: 'background.default', borderRadius: 5, px: 2, py: 3}}>
+                            <Grid container size={4} sx={{ width: '100%', backgroundColor: 'primary.main', color: 'background.default', borderRadius: 5, px: 2, py: 3, }}>
                                 <Grid size={4}>
                                     <Typography variant='h5' fontWeight={'700'}>
                                         {newStore}
                                     </Typography>
                                 </Grid>
-                                <Grid size={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                <Grid size={4} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                     <Typography variant='h5' fontWeight={'700'}>
                                         {newPrice}
                                     </Typography>
                                 </Grid>
-                                <Grid size={4} sx={{ display: 'flex', justifyContent: 'end' }}>
+                                <Grid size={4} sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
                                     <Typography variant='h5' fontWeight={'700'}>
                                         {newDiscount}
                                     </Typography>
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <Grid sx={{ width: '100%', display: 'flex', gap: 2, justifyContent: 'space-between', flexGrow: 1, }}>
-                            <Button variant='square-gray' fullWidth>CANCEL</Button>
-                            <Button variant='square-secondary' fullWidth>REPLACE</Button>
+                        <Grid sx={{ width: '100%', display: 'flex', gap: 2, justifyContent: 'space-between', flexGrow: 3, mt: 1, }}>
+                            <Button onClick={() => onClose()} variant='square-gray' fullWidth>CANCEL</Button>
+                            <Button onClick={() => replaceTrigger()} variant='square-secondary' fullWidth>REPLACE</Button>
                         </Grid>
                     </Grid>
                 </Box>

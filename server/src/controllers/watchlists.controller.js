@@ -526,8 +526,8 @@ export const getWatchlistsSummary = async (req, res, next) => {
 export const replaceItemDeal = async (req, res, next) => {
     try {
         const userId = req.anonUserId;
-        const { id } = req.params;
-        const { gameID, candidate } = req.body;
+        const { id, gameID } = req.params;
+        const { candidate } = req.body;
         if (!mongoose.isValidObjectId(id)) {
             return res.status(400).json({ error: 'Invalid watchlist id' });
         };
