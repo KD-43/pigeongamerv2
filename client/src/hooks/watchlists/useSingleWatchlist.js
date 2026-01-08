@@ -1,10 +1,29 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { fetchWatchlistById } from '../../services/watchlists';
 
 export function useSingleWatchlist(id) {
-    const [ watchlist, setWatchlist ] = useState([]);
+    const [ watchlist, setWatchlist ] = useState(null);
     const [ loading, setIsLoading ] = useState(true);
     const [ error, setError ] = useState(null);
+
+    const refetch = useCallback(async () => {
+        if (!id) return null;
+
+        try {
+            setIsLoading(true);
+            setError(null);
+
+            const data = await fetchWatchlistById(id);
+            setWatchlist(data);
+            return data;
+        } catch (err) {
+            const message = err.response?.data?.error || err.message;
+            setError(message);
+            throw err;
+        } finally {
+            setIsLoading(false);
+        }
+    }, [id]);
 
     useEffect(() => {
         if (!id) return;
@@ -35,6 +54,6 @@ export function useSingleWatchlist(id) {
         };
     },[id]);
 
-    return { watchlist, loading, error, setWatchlist };
+    return { watchlist, loading, error, setWatchlist, refetch };
 
 };

@@ -19,7 +19,7 @@ export const theme = createTheme({
         },
         divider: '#DFDFDF',
         black: {
-            default: '#0e0f0fff',
+            default: '#0b0c0c',
         }
         
     },
@@ -35,6 +35,30 @@ export const theme = createTheme({
                                 backgroundColor: '#F1F1F1',
                                 color: '#D500F9',
                                 border: '1px solid #D500F9',
+                                borderRadius: '40px',
+                                fontWeight: 'bolder',
+                                
+                            },
+                            
+                        },
+                        { 
+                            props: { variant: 'outlined-gray' }, 
+                            style: {
+                                backgroundColor: '#F1F1F1',
+                                color: '#0b0c0c',
+                                border: '3px solid #DFDFDF',
+                                borderRadius: '40px',
+                                fontWeight: 'bolder',
+                                
+                            },
+                            
+                        },
+                        { 
+                            props: { variant: 'outlined-primary' }, 
+                            style: {
+                                backgroundColor: '#F1F1F1',
+                                color: '#0b0c0c',
+                                border: '3px solid #009688',
                                 borderRadius: '40px',
                                 fontWeight: 'bolder',
                                 
@@ -63,7 +87,7 @@ export const theme = createTheme({
                         { 
                             props: { variant: 'black', size: 'large' }, 
                             style: {
-                                backgroundColor: '#0e0f0fff',
+                                backgroundColor: '#0b0c0c',
                                 color: '#F1F1F1',
                                 borderRadius: '40px',
                                 fontWeight: '900',
@@ -93,6 +117,32 @@ export const theme = createTheme({
                                 backgroundColor: '#DFDFDF',
                                 color: '#009688',
                                 borderRadius: '40px',
+                                fontWeight: '900',
+                                minHeight: 42,
+                                lineHeight: 1.75,
+                                paddingTop: 8,
+                                paddingBottom: 8,
+                            }
+                        },
+                        { 
+                            props: { variant: 'square-gray' }, 
+                            style: {
+                                backgroundColor: '#DFDFDF',
+                                color: '#009688',
+                                borderRadius: '10px',
+                                fontWeight: '900',
+                                minHeight: 42,
+                                lineHeight: 1.75,
+                                paddingTop: 8,
+                                paddingBottom: 8,
+                            }
+                        },
+                        { 
+                            props: { variant: 'square-secondary' }, 
+                            style: {
+                                backgroundColor: '#D500F9',
+                                color: '#F1F1F1',
+                                borderRadius: '10px',
                                 fontWeight: '900',
                                 minHeight: 42,
                                 lineHeight: 1.75,

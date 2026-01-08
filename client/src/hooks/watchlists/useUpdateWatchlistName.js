@@ -1,21 +1,21 @@
 import { useEffect, useState, useCallback } from 'react';
-import { createWatchlist } from '../../services/watchlists';
+import { updateWatchlistName } from '../../services/watchlists';
 
-export function useCreateWatchlist () {
+export function useUpdateWatchlistName () {
     const [ watchlist, setWatchlist ] = useState();
-    const [ loading, setIsLoading ] = useState(true);
+    const [ isLoading, setIsLoading ] = useState(true);
     const [ error, setError ] = useState(null);
 
-    const execute = useCallback( async (name) => {
+    const execute = useCallback( async (id, name) => {
         try {
             setIsLoading(true);
             setError(null);
 
-            const data = await createWatchlist(name);
+            const data = await updateWatchlistName(id, name);
             setWatchlist(data);
             return data;
         } catch (err) {
-            const message = err.response?.data?.error || err.message;
+            const message = err.response?.data?.error || err.response?.data?.message || err.message || "Unknown error";
             setError(message);
             throw new Error(message);
         } finally {
@@ -23,5 +23,5 @@ export function useCreateWatchlist () {
         }
     }, []);
 
-    return { execute, watchlist, loading, error };
+    return { execute, watchlist, isLoading, error };
 }

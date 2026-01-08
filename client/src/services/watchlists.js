@@ -31,11 +31,18 @@ export async function deleteItemFromWatchlist(id, gameID) {
 };
 
 export async function updateWatchlistName(id, name) {
-    const res = await api.patch(`/watchlists/${id}`, { name });
+    const safeName = String(name).replace(/[^a-zA-Z0-9]/g, '');
+    const res = await api.patch(`/watchlists/${id}`, { safeName });
     return res.data;
 };
 
 export async function deleteWatchlist() {
     const res = await api.delete(`/watchlists/${id}`);
+    return res.data;
+};
+
+export async function replaceWatchlistItem(id, gameID, candidate) {
+    const safeGameID = encodeURIComponent(gameID);
+    const res = await api.patch(`/watchlists/${id}/items/${safeGameID}`, { candidate });
     return res.data;
 };

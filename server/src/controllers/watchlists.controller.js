@@ -78,6 +78,7 @@ export const getSpecificWatchlist = async (req, res, next) => {
                 return {
                     dealID: item.dealID ?? null,
                     storeID: deal?.storeID ?? item.storeID ?? null,
+                    retailPrice: deal?.retailPrice ?? item.retailPrice ?? null,
                     currentPrice: 
                         deal?.salePrice !== null && deal?.salePrice !== undefined 
                         ? Number(deal?.salePrice) 
@@ -241,6 +242,7 @@ export const getSpecificWatchlist = async (req, res, next) => {
                 storeID: item.storeID ?? null,
                 dealID: item.dealID ?? null,
                 lastSeenPrice,
+                retailPrice: tracked.retailPrice,
                 currentPrice: trackedPrice,
                 priceChange,
                 delta,
@@ -524,8 +526,8 @@ export const getWatchlistsSummary = async (req, res, next) => {
 export const replaceItemDeal = async (req, res, next) => {
     try {
         const userId = req.anonUserId;
-        const { id } = req.params;
-        const { gameID, candidate } = req.body;
+        const { id, gameID } = req.params;
+        const { candidate } = req.body;
         if (!mongoose.isValidObjectId(id)) {
             return res.status(400).json({ error: 'Invalid watchlist id' });
         };
