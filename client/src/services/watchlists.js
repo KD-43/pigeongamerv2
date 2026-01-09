@@ -31,8 +31,10 @@ export async function deleteItemFromWatchlist(id, gameID) {
 };
 
 export async function updateWatchlistName(id, name) {
+    console.log("[FRONTEND] Updater: ", name);
     const safeName = String(name).replace(/[^a-zA-Z0-9]/g, '');
-    const res = await api.patch(`/watchlists/${id}`, { safeName });
+    console.log("[FRONTEND] safeName: ", safeName);
+    const res = await api.patch(`/watchlists/${id}`, { name });
     return res.data;
 };
 

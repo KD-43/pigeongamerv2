@@ -12,7 +12,7 @@ router.get("/:id", getSpecificWatchlist);
 router.post("/", createWatchlist);
 router.post("/:id/items", addItemToWatchlist);
 router.delete("/:id/items", deleteItemFromWatchlist);
-router.put("/:id", updateWatchlist);
+router.patch("/:id", updateWatchlist);
 router.delete("/:id", deleteWatchlist);
 router.patch("/:id/items/:gameID", replaceItemDeal);
 

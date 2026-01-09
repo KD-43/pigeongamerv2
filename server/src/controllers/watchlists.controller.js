@@ -397,6 +397,7 @@ export const updateWatchlist = async (req, res, next) => {
         
         const rawName = req.body.name;
         const name = sanitizeTitle(rawName);
+        console.log("[BACKEND]: ", rawName);
         if (!name || !name.trim()) {
             return res.status(400).json({ error: 'Name is required' });
         };
