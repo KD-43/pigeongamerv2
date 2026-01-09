@@ -1,4 +1,4 @@
-export function sanitizeTitle(raw, { maxLength = 80 } = {}) {
+export function sanitizeTitle(raw, { maxLength = 40 } = {}) {
     if (typeof raw !== 'string') return '';
 
     let title = raw.trim();

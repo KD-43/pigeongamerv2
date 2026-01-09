@@ -72,7 +72,8 @@ export default function Watchlist ({ title, items = [], actionLabel = 'View All'
                 display: 'flex',
                 flexGrow: '1',
                 flexDirection: 'column',
-                my: 4,
+                mt: 4,
+                // mb: 4,
             }}>
                 <CardContent sx={{ py:0, px: 0, '&:last-child': { paddingBottom: 0, }}}>
                     <Stack

@@ -3,7 +3,7 @@ import { updateWatchlistName } from '../../services/watchlists';
 
 export function useUpdateWatchlistName () {
     const [ watchlist, setWatchlist ] = useState();
-    const [ isLoading, setIsLoading ] = useState(true);
+    const [ isLoading, setIsLoading ] = useState(false);
     const [ error, setError ] = useState(null);
 
     const execute = useCallback( async (id, name) => {

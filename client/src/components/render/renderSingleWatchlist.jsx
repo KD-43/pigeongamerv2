@@ -1,26 +1,76 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import Watchlist from "../WatchlistComponent";
 import { Typography, CircularProgress, Box, Grid, useTheme, IconButton } from "@mui/material";
 import { Edit } from "@mui/icons-material";
 import ErrorRender from "./errorCodeRender";
-import { useReplaceWatchlistItem } from "../../hooks/watchlists/useReplaceWatchlistItem";
-import { useCallback } from "react";
+import SimpleModal from "../util/simpleTemplateModalComponent";
+import TextField from '@mui/material/TextField';
 
-export default function RenderSingleWatchlist ({ watchlist, watchlistStatus, deleteCallbackStatus, deleteCallback, replaceCallback, replaceCallbackStatus }) {
+export default function RenderSingleWatchlist ({ watchlist, watchlistStatus, deleteCallbackStatus, deleteCallback, replaceCallback, replaceCallbackStatus, renameCallback, renameCallbackStatus}) {
     const theme = useTheme();
     const navigate = useNavigate();
+    const [ isModalOpen, setIsModalOpen ] = useState(false);
+    const [ renameValue, setRenameValue ] = useState('');
+    const [ isSubmitting, setIsSubmitting ] = useState(false);
     const { watchlistLoading, watchlistError } = watchlistStatus;
     const { replaceIsLoading, replaceError } = replaceCallbackStatus;
+    const { renameIsLoading, renameError } = renameCallbackStatus;
 
-    if (watchlistError || replaceError) {
+    const MAX_LEN = 40;
+
+    const isTooLong = renameValue.length > MAX_LEN;
+    const isEmpty = renameValue.trim().length === 0;
+
+    const disableSubmit = isSubmitting || isTooLong || isEmpty;
+
+    console.log("renameValue: ", renameValue);
+    const handleModalOpen = () => {
+        setIsModalOpen(true);
+    }
+
+    const handleModalClose = () => {
+        setIsModalOpen(false);
+    }
+
+    const RenderTextField = () => {
+        return (
+            <TextField
+                autoFocus
+                margin="dense"
+                fullWidth
+                value={renameValue}
+                onChange={(e) => setRenameValue(e.target.value)}
+                label={"New Name"}
+            />
+        )
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (disableSubmit) return;
+
+        try {
+            setIsSubmitting(true);
+            await renameCallback(renameValue);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setIsSubmitting(false);
+            setIsModalOpen(false);
+        }
+    };
+
+
+    if (watchlistError || replaceError || renameError) {
         return (
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '75vh' }}>
-                <ErrorRender code={error.error} />
+                <ErrorRender code={"Unknown Error"} />
             </Box>
         )
     };
     
-    if (watchlistLoading || replaceIsLoading) {
+    if (watchlistLoading || replaceIsLoading || renameIsLoading) {
         return (
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '75vh' }}>
                 <CircularProgress size={56} />
@@ -30,9 +80,18 @@ export default function RenderSingleWatchlist ({ watchlist, watchlistStatus, del
 
     return (
         <>
-            <Box sx={{ display: 'flex', gap: 3, justifyContent: 'start', alignItems: 'baseline', mt: 6,}}>
-                <Typography variant='h2' fontWeight={'900'} sx={{ color: 'black'}}>{watchlist.name}</Typography>
-                <IconButton color="primary" sx={{ backgroundColor: 'tertiary.main', }}>
+            <SimpleModal 
+                isOpen={isModalOpen} 
+                onClose={handleModalClose}
+                content={{ title: 'Rename Watchlist', body: 'Max length is 40 characters', abort: 'CANCEL', cta: 'RENAME' }}
+                onSubmit={handleSubmit}
+                formId={'rename-watchlist-form'}
+                children={<RenderTextField />}
+                disableSubmit={disableSubmit}
+            />
+            <Box sx={{ display: 'flex', gap: 3, justifyContent: 'start', alignItems: 'baseline', mt: 6, minWidth: 0 }}>
+                <Typography variant='h2' fontWeight={'900'} sx={{ minWidth: 0, color: 'black', whiteSpace: 'normal', overflowWrap: 'break-word'}}>{watchlist.name}</Typography>
+                <IconButton onClick={handleModalOpen} color="primary" sx={{ backgroundColor: 'tertiary.main', }}>
                     <Edit size="medium" color="primary.main" />
                 </IconButton>
             </Box>

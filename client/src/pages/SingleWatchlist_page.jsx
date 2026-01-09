@@ -13,6 +13,7 @@ import apiConversion from '../util/apiDataConversion';
 import RenderSingleWatchlist from '../components/render/renderSingleWatchlist';
 import { useDeleteItemFromWatchlist } from '../hooks/watchlists/useDeleteItemFromWatchlist';
 import { useReplaceWatchlistItem } from '../hooks/watchlists/useReplaceWatchlistItem';
+import { useUpdateWatchlistName } from '../hooks/watchlists/useUpdateWatchlistName';
 
 
 export default function SingleWatchlistPage () {
@@ -22,11 +23,13 @@ export default function SingleWatchlistPage () {
     const params = useParams();
 	const watchlistId = params.watchlistId;
 	const { watchlist, loading: watchlistLoading, error: watchlistError, setWatchlist, refetch } = useSingleWatchlist(watchlistId);
-    const { execute: deleteExecute, loading: deleteLoading, error: deleteError } = useDeleteItemFromWatchlist();
+    const { execute: executeDeleteItem, loading: deleteLoading, error: deleteError } = useDeleteItemFromWatchlist();
     const { execute: executeReplace, isLoading: replaceIsLoading, error: replaceError } = useReplaceWatchlistItem();
+    const { execute: executeRename, isLoading: renameIsLoading, error: renameError } = useUpdateWatchlistName();
     const statusOfWatchlist = { watchlistLoading, watchlistError };
     const statusOfDeleteCallback = { deleteLoading, deleteError };
     const statusOfReplaceCallback = { replaceIsLoading, replaceError };
+    const statusOfRenameCallback = { renameIsLoading, renameError };
 
     const handleDeleteItemFromWatchlist = async (gameID) => {
         if (!watchlist) return;
@@ -37,7 +40,7 @@ export default function SingleWatchlistPage () {
         setWatchlist({ ...watchlist, items: nextItems });
         
         try {
-            const updated = await deleteExecute(watchlist.id, gameID);
+            const updated = await executeDeleteItem(watchlist.id, gameID);
             setWatchlist(updated)
 
         } catch (err) {
@@ -56,12 +59,33 @@ export default function SingleWatchlistPage () {
             console.error("Replace failed: ", err);
         }
     };
+
+    const handleRenameWatchlist = async (name) => {
+        if (!watchlist || !watchlist.id) return null;
+        console.log("handleRenameWatchlist", name);
+
+        try {
+            await executeRename(watchlist.id, name);
+            await refetch();
+        } catch (err) {
+            console.error("Rename failed: ", err);
+        }
+    };
     
     return (
         <>
-            <Container sx={{ paddingTop: 7, minHeight: '100vh', }}>
+            <Container sx={{ paddingTop: 7, paddingBottom: 20, minHeight: '100vh', }}>
                 <Navbar />
-                <RenderSingleWatchlist watchlist={watchlist} watchlistStatus={statusOfWatchlist} deleteCallbackStatus={statusOfDeleteCallback} deleteCallback={handleDeleteItemFromWatchlist} replaceCallback={handleReplaceItem} replaceCallbackStatus={statusOfReplaceCallback} />
+                <RenderSingleWatchlist 
+                    watchlist={watchlist} 
+                    watchlistStatus={statusOfWatchlist}
+                    deleteCallback={handleDeleteItemFromWatchlist} 
+                    deleteCallbackStatus={statusOfDeleteCallback}
+                    replaceCallback={handleReplaceItem} 
+                    replaceCallbackStatus={statusOfReplaceCallback}
+                    renameCallback={handleRenameWatchlist}
+                    renameCallbackStatus={statusOfRenameCallback}
+                />
             </Container>
             <Footer />
         </>
