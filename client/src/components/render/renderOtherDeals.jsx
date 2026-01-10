@@ -18,7 +18,7 @@ export default function RenderOtherDeals ({ otherDeals }) {
 
     return (
         <>
-            <Typography variant='h4' fontWeight={'bold'} sx={{ mt: 10, color: 'primary.main'}}>Other deals to check out:</Typography>
+            <Typography variant='h4' fontWeight={'900'} sx={{ mt: 10, color: 'primary.main'}}>Other deals to check out:</Typography>
             <List
                 items={otherDeals}
                 actionLabel="View More"

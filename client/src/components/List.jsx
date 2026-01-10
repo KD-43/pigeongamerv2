@@ -14,6 +14,8 @@ export default function List({ title, items = [], actionLabel = 'View All', onAc
   const { freeOrNah, storeName, discountPercentage } = apiConversion();
   const [ isHovered, setIsHovered ] = useState(false);
   const navigate = useNavigate();
+  
+  console.log("Current items in List component: ", items);
 
   if (itemsError) {
     return (
@@ -210,7 +212,6 @@ export default function List({ title, items = [], actionLabel = 'View All', onAc
                   onMouseEnter={() => setIsHovered(true)}
                   onMouseLeave={() => setIsHovered(false)}
                   key={i}
-                  onClick={onItemClick ? () => onItemClick(i) : undefined}
                   sx={(theme) => ({
                     px: 3,
                     py: 2,
@@ -268,44 +269,44 @@ export default function List({ title, items = [], actionLabel = 'View All', onAc
                       <Grid container spacing={1} sx={{ display: 'inline-flex'}}>
                         <Grid size={6}>
                           <Box className={'itemPrice'} sx={{
-                              flex: '0 0 75px',
-                              width: 75,
-                              minWidth: 75,
-                              height: 33,
-                              borderRadius: '40px',
-                              bgcolor: 'tertiary.main',
-                              color: 'black',
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              whiteSpace: 'nowrap',
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                              boxSizing: 'border-box',
-                              fontVariantNumeric: 'tabular-nums',
-                              px: 1.5,
+                            flex: '0 0 75px',
+                            width: 75,
+                            minWidth: 75,
+                            height: 33,
+                            borderRadius: '40px',
+                            bgcolor: 'tertiary.main',
+                            color: 'black',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            boxSizing: 'border-box',
+                            fontVariantNumeric: 'tabular-nums',
+                            px: 1.5,
                           }}>
-                              {item.salePrice ? freeOrNah(item.salePrice ) : '' }
+                            {item.salePrice ? freeOrNah(item.salePrice ) : '' }
                           </Box>
                         </Grid>
                         <Grid size={6}>
                           <Box className={'itemDiscount'} sx={{
-                              flex: '0 0 75px',
-                              width: 75,
-                              minWidth: 75,
-                              height: 33,
-                              borderRadius: '40px',
-                              bgcolor: 'primary.main',
-                              color: 'background.default',
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                        
-                              boxSizing: 'border-box',
-                              fontVariantNumeric: 'tabular-nums',
-                              px: 1.5,
+                            flex: '0 0 75px',
+                            width: 75,
+                            minWidth: 75,
+                            minHeight: 33,
+                            borderRadius: '40px',
+                            bgcolor: 'primary.main',
+                            color: 'background.default',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                      
+                            boxSizing: 'border-box',
+                            fontVariantNumeric: 'tabular-nums',
+                            px: 1.5,
                           }}>
-                              {item.retailPrice && item.salePrice ? discountPercentage(item.retailPrice, item.salePrice) : ''}
+                            {item.retailPrice && item.salePrice ? discountPercentage(item.retailPrice, item.salePrice) : ''}
                           </Box>
                         </Grid>
                       </Grid>
@@ -313,7 +314,9 @@ export default function List({ title, items = [], actionLabel = 'View All', onAc
                     </Grid>
 
                     <Grid size={4} sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}>
-                        <Button className='otherDeals_cta' sx={{ border: '1px solid', borderColor: 'secondary.main', borderRadius: '20px', color: 'secondary.main', transition: 'all 0.1s ease-in', display: 'flex',  justifyContent: 'space-between', alignItems: 'center', gap: 1, }}>Go to deal<OpenInNew /></Button>
+                        <Button LinkComponent={"a"} href={`https://www.cheapshark.com/redirect?dealID=${item.dealID}`} target="_blank" rel="noopener noreferrer" className='otherDeals_cta' sx={{ border: '1px solid', borderColor: 'secondary.main', borderRadius: '20px', color: 'secondary.main', transition: 'all 0.1s ease-in', display: 'flex',  justifyContent: 'space-between', alignItems: 'center', gap: 1, }}>
+                          <Typography variant='body2' fontWeight={'900'}>Go to deal</Typography><OpenInNew />
+                        </Button>
                     </Grid>
 
                   </Grid>
@@ -347,7 +350,7 @@ export default function List({ title, items = [], actionLabel = 'View All', onAc
               {items.map((item, i) => (
                 <Box
                   key={i}
-                  onClick={onItemClick ? () => onItemClick(i) : undefined}
+                  onClick={onItemClick ? (e) => { e.stopPropagation(); onItemClick(i)} : undefined}
                   sx={(theme) => ({
                     px: 3,
                     py: 2,
@@ -403,7 +406,7 @@ export default function List({ title, items = [], actionLabel = 'View All', onAc
                     </Grid>
 
                     <Grid size={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <IconButton><Delete /></IconButton>
+                        <IconButton onClick={onAction ? (e) => { e.stopPropagation(); onAction(i)} : undefined}><Delete /></IconButton>
                     </Grid>
 
                   </Grid>

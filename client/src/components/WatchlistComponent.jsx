@@ -42,6 +42,7 @@ export default function Watchlist ({ title, items = [], actionLabel = 'View All'
     };
 
     const priceChangeColor = (priceChange) => {
+        console.log("priceChange", priceChange);
         if (priceChange === null) return black;
 
         if (priceChange !== "same") {
@@ -58,6 +59,27 @@ export default function Watchlist ({ title, items = [], actionLabel = 'View All'
             </Box>
         );
     }
+
+    const RenderUIUpdateAvailability = ({ item, index }) => {
+        if (!item || item === undefined || item === null) return null;
+        if (item.ui === undefined || item.ui === null) return null;
+        switch (item.ui.updateAvailable) {
+            case true:
+                return (
+                    <Button onClick={() => handleModalOpen(index)} variant={'outlined-gray'} fullWidth size={'medium'} sx={{ height: '100%', flexGrow: 1, whiteSpace: 'nowrap', display: 'flex', gap: 1, alignItems: 'space-between', justifyContent: 'center' }}>
+                        <Typography fontWeight={'900'} fontSize={'clamp(9px, 0.5vw, 12px)'} color='primary.main'>New Deal</Typography>
+                    </Button>
+                );
+            case false:
+                return (
+                    <Clear sx={{ color: 'tertiary.main'}} />
+                );
+            default:
+                return (
+                    <Clear sx={{ color: 'tertiary.main'}} />
+                );
+        };
+    };
 
     return (
         <>
@@ -121,9 +143,7 @@ export default function Watchlist ({ title, items = [], actionLabel = 'View All'
                                         </Button>
                                     </Grid>
                                     <Grid size={3} sx={{ flexGrow: 1, flexWrap: 'nowrap', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                                        { item.ui.updateAvailable ? <Button onClick={() => handleModalOpen(i)} variant={'outlined-gray'} fullWidth size={'medium'} sx={{ height: '100%', flexGrow: 1, whiteSpace: 'nowrap', display: 'flex', gap: 1, alignItems: 'space-between', justifyContent: 'center' }}>
-                                            <Typography fontWeight={'900'} fontSize={'clamp(9px, 0.5vw, 12px)'} color='primary.main'>New Deal</Typography>
-                                        </Button>: <Clear sx={{ color: 'tertiary.main'}} />}
+                                        <RenderUIUpdateAvailability item={item} index={i} />
                                     </Grid>
                                     <Grid size={1} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                         <IconButton onClick={() => deleteItem(item.gameID)}><Delete /></IconButton>

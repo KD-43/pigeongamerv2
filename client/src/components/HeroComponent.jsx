@@ -136,7 +136,7 @@ export default function HeroBase ({ deals = [], loading = false, error = null, i
                             height: '100%',
                         }}>
                             <Grid container size={6} sx={{ width: '100%', flexGrow: 1, alignItems: 'end', flex: '0 0 50%', minHeight: 0, }}>
-                                <Typography sx={{ fontWeight: 'bold', fontSize: 'clamp(2rem, 3vw, 3rem)', lineHeight: '1.2', maxWidth: '75%', width: 'fit-content', }}>
+                                <Typography sx={{ fontWeight: '900', fontSize: 'clamp(2rem, 3vw, 3rem)', lineHeight: '1.2', maxWidth: '75%', width: 'fit-content', }}>
                                     {title}
                                 </Typography>
                             </Grid>
@@ -164,7 +164,7 @@ export default function HeroBase ({ deals = [], loading = false, error = null, i
                                             <Button onClick={() => navigate(`/deals/details/${dealID}`)} fullWidth variant="black" size="large" sx={{ position: 'relative', zIndex: 10, display: 'flex', gap: 1, }}>Go to page <InfoOutline /></Button>
                                         </Grid>
                                         <Grid size={6} sx={{ }}>
-                                            <Button fullWidth variant="contained" size="large" sx={{ position: 'relative', zIndex: 10, display: 'flex', gap: 1, }}>Go to deal <OpenInNew /></Button>
+                                            <Button LinkComponent={"a"} href={`https://www.cheapshark.com/redirect?dealID=${dealID}`} target="_blank" rel="noopener noreferrer" fullWidth variant="contained" size="large" sx={{ position: 'relative', zIndex: 10, display: 'flex', gap: 1, }}>Go to deal <OpenInNew /></Button>
                                         </Grid>
                                     </Grid>
                                 </Grid>

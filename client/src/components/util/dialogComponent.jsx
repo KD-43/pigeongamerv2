@@ -6,7 +6,7 @@ export function CreateWatchlistDialog({
   onClose,
   onSubmit,
   submitting = false,
-  title = 'Create new watchlist',
+  title = 'Create New Watchlist',
   label = 'Watchlist name',
 }) {
     const [value, setValue] = useState('');
@@ -40,7 +40,7 @@ export function CreateWatchlistDialog({
     return (
         <Dialog open={open} onClose={submitting ? undefined : onClose} fullWidth maxWidth="xs" slotProps={{ paper: { sx: { borderRadius: '20px' }} }}>
             <form onSubmit={handleSubmit}>
-                <DialogTitle sx={{ fontWeight: 'bold', color: theme.palette.primary.main }}>{title}</DialogTitle>
+                <DialogTitle sx={{ fontWeight: '900', color: theme.palette.primary.main }}>{title}</DialogTitle>
 
                 <DialogContent>
                     <TextField
@@ -57,12 +57,12 @@ export function CreateWatchlistDialog({
                 </DialogContent>
 
                 <DialogActions sx={{ px: '24px', pb: 2, }}>
-                    <Button onClick={onClose} disabled={submitting}>
+                    <Button variant='square-gray' onClick={onClose} disabled={submitting}>
                     Cancel
                     </Button>
                     <Button
                         type="submit"
-                        variant="contained"
+                        variant="square-secondary"
                         disabled={submitting}
                     >
                     {submitting ? 'Creating…' : 'Create'}

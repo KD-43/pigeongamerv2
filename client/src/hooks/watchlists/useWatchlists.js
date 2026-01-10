@@ -1,10 +1,28 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { fetchWatchlistsSummary } from '../../services/watchlists';
 
 export function useWatchlists() {
     const [ watchlists, setWatchlists ] = useState([]);
     const [ loading, setIsLoading ] = useState(true);
     const [ error, setError ] = useState(null);
+
+    const refetch = useCallback(async () => {
+
+        try {
+            setIsLoading(true);
+            setError(null);
+
+            const data = await fetchWatchlistsSummary();
+            setWatchlists(data);
+            return data;
+        } catch (err) {
+            const message = err.response?.data?.error || err.message;
+            setError(message);
+            throw err;
+        } finally {
+            setIsLoading(false);
+        }
+    }, []);
 
     useEffect(() => {
         let cancelled = false;
@@ -33,6 +51,6 @@ export function useWatchlists() {
         };
     },[]);
 
-    return { watchlists, loading, error, setWatchlists };
+    return { watchlists, loading, error, setWatchlists, refetch };
 
 };

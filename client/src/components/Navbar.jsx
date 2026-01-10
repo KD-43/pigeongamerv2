@@ -35,7 +35,7 @@ export default function Navbar() {
                 edge="start"
                 color="primary"
                 aria-label="Home Button"
-                sx={{ mr: 13 }}
+                sx={{ mr: 13, padding: 1, }}
                 to="/"
               >
                 <img src={PGLogo} width={36} height={36} />
@@ -47,7 +47,7 @@ export default function Navbar() {
                 edge="start"
                 color="primary"
                 aria-label="open drawer"
-                sx={{ mr: 2 }}
+                sx={{ mr: 2, padding: 1, }}
               >
                 <Notifications />
               </IconButton>
@@ -56,7 +56,7 @@ export default function Navbar() {
                 edge="start"
                 color="primary"
                 aria-label="open drawer"
-                sx={{ mr: 2 }}
+                sx={{ mr: 2, padding: 1, }}
                 onClick={() => navigate('/watchlists')}
               >
                 <FormatListBulleted />
@@ -66,6 +66,7 @@ export default function Navbar() {
                 edge="start"
                 color="primary"
                 aria-label="open drawer"
+                sx={{ padding: 1, }}
               >
                 <AccountCircle />
               </IconButton>

@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { createWatchlist } from '../../services/watchlists';
 
 export function useCreateWatchlist () {
-    const [ watchlist, setWatchlist ] = useState();
+    const [ watchlist, setWatchlist ] = useState([]);
     const [ loading, setIsLoading ] = useState(true);
     const [ error, setError ] = useState(null);
 
