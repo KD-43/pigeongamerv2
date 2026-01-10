@@ -118,7 +118,6 @@ export function DropdownButton({
 
     return (
         <Box sx={{ position: 'relative', width: fullWidth ? '100%' : 'auto' }}>
-            {/* BUTTON */}
             <Button
                 ref={buttonRef}
                 onClick={handleToggle}
@@ -145,7 +144,6 @@ export function DropdownButton({
             />
             </Button>
 
-            {/* DROPDOWN PANEL */}
             <Grow in={open} timeout={0.1} style={{ transformOrigin: 'top center',}} unmountOnExit>
                 <Box ref={menuRef} sx={{
                     position: 'absolute',
@@ -179,7 +177,7 @@ export function DropdownButton({
                                 onClick={onCreateNew ? () => onCreateNew() : undefined}
                                 sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'  }}
                             >
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: theme.palette.background.default, fontWeight: '900', fontSize: ''}}>
+                                <Box onClick={() => onCreateNew()} sx={{ display: 'flex', alignItems: 'center', gap: 1, color: theme.palette.background.default, fontWeight: '900', fontSize: ''}}>
                                     <AddCircleOutline fontSize="small" />
                                     <span>CREATE WATCHLIST</span>
                                 </Box>

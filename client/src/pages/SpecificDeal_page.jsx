@@ -37,7 +37,7 @@ export default function SpecificDeal () {
 
                 <Grid container spacing={8} justifyContent={'space-between'} sx={{}}>
                     <Grid size={6}>
-                        <Typography variant="h3" fontWeight={'700'} color={'primary'} textAlign={'end'}>
+                        <Typography variant="h3" fontWeight={'900'} color={'primary'} textAlign={'end'}>
                             Have a title in mind? <br /> Look for it!
                         </Typography>
                     </Grid>

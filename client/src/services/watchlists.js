@@ -10,8 +10,8 @@ export async function fetchWatchlistsSummary() {
     return res.data;
 };
 
-export async function fetchWatchlistById(id) {
-    const res = await api.get(`/watchlists/${id}`);
+export async function fetchWatchlistById(id, { signal } = {}) {
+    const res = await api.get(`/watchlists/${id}`, { signal });
     return res.data;
 };
 
@@ -38,7 +38,7 @@ export async function updateWatchlistName(id, name) {
     return res.data;
 };
 
-export async function deleteWatchlist() {
+export async function deleteWatchlist(id) {
     const res = await api.delete(`/watchlists/${id}`);
     return res.data;
 };

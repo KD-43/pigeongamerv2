@@ -7,7 +7,7 @@ import Navbar from "../components/Navbar";
 import List from "../components/List";
 import Footer from '../components/FooterComponent';
 import Searchbar from '../components/Searchbar';
-import renderWatchlists from '../components/render/renderWatchlists';
+import RenderWatchlists from '../components/render/renderWatchlists';
 import { CreateWatchlistDialog } from '../components/util/dialogComponent';
 
 export default function Watchlists () {
@@ -47,7 +47,7 @@ export default function Watchlists () {
                 <Navbar />
                 <Grid container spacing={1} sx={{ justifyContent: 'start', alignItems: 'center', mt: 7, }}>
                     <Box sx={{ display: 'inline-flex', justifyItems: 'start', }}>
-                        <Typography variant={'h3'} color={'primary.main'} fontWeight={'bold'}>Your Watchlists</Typography>
+                        <Typography variant={'h3'} color={'primary.main'} fontWeight={'900'}>Your Watchlists</Typography>
                     </Box>
                     <Box sx={{ marginLeft: 1, }}>
                         <Button onClick={handleOpenDialog} variant={'contained'} size="large" sx={{ display: 'flex', justifyContent: 'space-between', gap: 1, }}>Create One <AddCircleOutline /></Button>
@@ -60,7 +60,7 @@ export default function Watchlists () {
                     onSubmit={handleCreateWatchlist}
                     submitting={submitting}
                 />
-                {renderWatchlists()}
+                <RenderWatchlists />
 
             </Container>
             <Footer />

@@ -31,20 +31,25 @@ export default function SingleWatchlistPage () {
     const statusOfReplaceCallback = { replaceIsLoading, replaceError };
     const statusOfRenameCallback = { renameIsLoading, renameError };
 
+    useEffect(() => {
+        console.log('SingleWatchlistPage mounted');
+        return () => console.log('SingleWatchlistPage unmounted');
+    }, []);
+
     const handleDeleteItemFromWatchlist = async (gameID) => {
         if (!watchlist) return;
-        const prevWatchlist = watchlist;
-        const prevWatchlistItems = watchlist.items || [];
-
-        const nextItems = prevWatchlistItems.filter((item) => item.gameID !== gameID);
-        setWatchlist({ ...watchlist, items: nextItems });
+        if (!gameID) return;
         
         try {
-            const updated = await executeDeleteItem(watchlist.id, gameID);
-            setWatchlist(updated)
+            setWatchlist(prev => {
+                const newArr = prev.items.filter(i => i.gameID !== gameID);
+                if (newArr.length === 0) return prev;
+                return { ...prev, items: newArr };
+            });
+            await executeDeleteItem(watchlist.id, gameID);
+            // await refetch();
 
         } catch (err) {
-            setWatchlist(prevWatchlist);
             console.error('Delete failed: ', err);
         }
     };

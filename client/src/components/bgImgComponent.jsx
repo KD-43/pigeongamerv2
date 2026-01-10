@@ -6,20 +6,20 @@ import BrokenImageFallback from './util/brokenImageComponent';
 import textureOverlay from "../assets/images/pexels-seamlesstextures-11236676_downSize.jpg";
 import { DropdownButton } from './util/dropDownComponent';
 import { useWatchlists } from '../hooks/watchlists/useWatchlists';
-import { useAddItemToWatchlist } from '../hooks/watchlists/useAddItemToWatchlist';
 import { useCreateWatchlist } from '../hooks/watchlists/useCreateWatchlist';
 import { CreateWatchlistDialog } from './util/dialogComponent';
+import LoadingRender from './render/loadingRender';
+import ErrorRender from './render/errorCodeRender';
 
 export default function BgImg ({ payload, width, height = 500, py, }) {
     const theme = useTheme();
     console.log('payload', payload);
+    const [ dialogOpen, setDialogOpen ] = useState(false);
+    const [ submitting, setSubmitting ] = useState(false);
     const { dealId, gameInfo } = payload;
     const { storeID, gameID, name, salePrice, retailPrice, thumb, } = gameInfo;
     const { freeOrNah, storeName, discountPercentage } = apiConversion();
-    const { watchlists, loading, error } = useWatchlists();
-    const [ dropdownOpen, setDropdownOpen ] = useState(false);
-    const [ dialogOpen, setDialogOpen ] = useState(false);
-    const [ submitting, setSubmitting ] = useState(false);
+    const { watchlists, loading, error, setWatchlists, refetch } = useWatchlists();
     const { execute: executeCreateWatchlist, watchlist: updatedWatchlists, loading: createWatchlistLoading, error: createWatchlistError } = useCreateWatchlist();
 
     const handleOpenDialog = () => setDialogOpen(true);
@@ -29,23 +29,29 @@ export default function BgImg ({ payload, width, height = 500, py, }) {
     };
 
     const handleCreateWatchlist = async (name) => {
+        if (!name) return null;
         try {
             setSubmitting(true);
 
-            const newList = await executeCreateWatchlist(name);
-            const id = newList.id || newList._id;
-
-            setDialogOpen(false);
-
+            await executeCreateWatchlist(name);
+            const updateList = await refetch();
+            setWatchlists(updateList);
         } catch (err) {
             console.error(err);
         } finally {
             setSubmitting(false);
+            setDialogOpen(false);
         }
     };
 
     return (
         <>
+            <CreateWatchlistDialog
+                open={dialogOpen}
+                onClose={handleCloseDialog}
+                onSubmit={handleCreateWatchlist}
+                submitting={submitting}
+            />
             <Box sx={{ backgroundColor: theme.palette.primary.main, borderRadius: '42px', width: width, height: height, position: 'relative', px: py * 2, py: py, }}>
                 {thumb ? (
                     <Box
@@ -152,7 +158,6 @@ export default function BgImg ({ payload, width, height = 500, py, }) {
                             </Grid>
                             <Grid container size={6} sx={{ width: '100%' }}>
                                 <Grid size={6} sx={{ alignContent: 'end'}}>
-                                    {/* <Button onClick={(e) => handleMenuButtonOpen(e)} fullWidth variant="gray" size="large" sx={{ display: 'flex',  justifyContent: 'center', alignItems: 'center', gap: 1, zIndex: 10, }}>Add to Watchlist <ExpandMore /></Button> */}
                                     <DropdownButton 
                                         items={watchlists}
                                         payload={payload}
@@ -160,15 +165,9 @@ export default function BgImg ({ payload, width, height = 500, py, }) {
                                         error={error}
                                         onCreateNew={handleOpenDialog}
                                     />
-                                    {/* <CreateWatchlistDialog
-                                        open={dialogOpen}
-                                        onClose={handleCloseDialog}
-                                        onSubmit={handleCreateWatchlist}
-                                        submitting={submitting}
-                                    /> */}
                                 </Grid>
                                 <Grid size={6} sx={{ alignContent: 'end' }}>
-                                    <Button fullWidth variant="contained" size="large" sx={{ display: 'flex',  justifyContent: 'center', alignItems: 'center', gap: 1,  }}>Go to deal <OpenInNew /></Button>
+                                    <Button LinkComponent={"a"} href={`https://www.cheapshark.com/redirect?dealID=${dealId}`} target="_blank" rel="noopener noreferrer" fullWidth variant="contained" size="large" sx={{ display: 'flex',  justifyContent: 'center', alignItems: 'center', gap: 1,  }}>Go to deal <OpenInNew /></Button>
                                 </Grid>
                             </Grid>
 
