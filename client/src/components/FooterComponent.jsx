@@ -16,11 +16,11 @@ export default function Footer() {
         <Grid container spacing={4}>
 
           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-            <Typography variant="h6" fontWeight={700} gutterBottom>
-              MyBrand
+            <Typography variant="h6" fontWeight={900} gutterBottom>
+              Pigeon Gamer
             </Typography>
             <Typography variant="body2" color="tertiary.main">
-              Making web experiences simple, elegant, and responsive.
+              Getting the deals you want, at the prices you want.
             </Typography>
           </Grid>
 
@@ -50,9 +50,6 @@ export default function Footer() {
                 Docs
               </Link>
               <Link color="inherit" underline="hover" href="#">
-                Tutorials
-              </Link>
-              <Link color="inherit" underline="hover" href="#">
                 API
               </Link>
             </Box>
@@ -60,7 +57,7 @@ export default function Footer() {
 
           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <Typography variant="subtitle1" fontWeight={600} gutterBottom>
-              Follow Us
+              Follow 'Us'
             </Typography>
             <Box sx={{ display: 'flex', gap: 2 }}>
               <Link color="inherit" href="#">
@@ -76,7 +73,7 @@ export default function Footer() {
         <Divider sx={{ my: 4, borderColor: 'background.default' }} />
 
         <Typography variant="body2" color="tertiary.main" textAlign="center">
-          © {new Date().getFullYear()} MyBrand. All rights reserved.
+          © {new Date().getFullYear()} PigeonGamer. All rights reserved.
         </Typography>
       </Container>
     </Box>

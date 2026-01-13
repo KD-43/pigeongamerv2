@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useCreateWatchlist } from '../hooks/watchlists/useCreateWatchlist';
 import { Link, useNavigate } from 'react-router'
 import { Box, Button, Container, Grid, Typography, useTheme, CircularProgress } from '@mui/material';
@@ -15,6 +15,7 @@ export default function Watchlists () {
     const theme = useTheme();
     const [dialogOpen, setDialogOpen] = useState(false);
     const [submitting, setSubmitting] = useState(false);
+    const [ isWatchlistCount, setIsWatchlistCount ] = useState(0);
     const navigate = useNavigate();
     const { execute, watchlist, loading, error } = useCreateWatchlist();
 
@@ -23,6 +24,11 @@ export default function Watchlists () {
         if (submitting) return;
         setDialogOpen(false);
     };
+
+    const watchlistCount = useCallback((count) => {
+        if (!count) setIsWatchlistCount(0);
+        setIsWatchlistCount(count);
+    }, []);
 
     const handleCreateWatchlist = async (name) => {
         try {
@@ -54,13 +60,32 @@ export default function Watchlists () {
                     </Box>
                 </Grid>
 
+                <Box container sx={{ mt: 2, mb: 5, display: 'flex', justifyContent: 'start', gap: 3, }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', px: 2, py: 1, backgroundColor: 'tertiary.main', borderRadius: 8, }}>
+                            <Typography variant="body1" fontWeight={'900'}>
+                                You have {isWatchlistCount} { isWatchlistCount ? isWatchlistCount > 1 ? 'Watchlists' : 'Watchlist' : 'Watchlists'  }
+                            </Typography>
+                        </Box>
+                    </Box>
+                </Box>
+                <Box sx={{ backgroundColor: theme.palette.tertiary.main, borderRadius: 40, height: 48, width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', px: 3, py: 2,  }}>
+                    <Grid container spacing={1} sx={{}}>
+                        <Grid size={4} sx={{ display: 'grid', placeItems: 'start'}}><Typography variant="body1" fontWeight={'900'}>LIST NAME</Typography></Grid>
+                        <Grid size={2} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body1" fontWeight={'900'}>CREATED/UPDATED</Typography></Grid>
+                        <Grid size={2} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body1" fontWeight={'900'}>ITEMS</Typography></Grid>
+                        <Grid size={2} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body1" fontWeight={'900'}>CHANGES</Typography></Grid>
+                        <Grid size={2} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body1" fontWeight={'900'}>DELETE</Typography></Grid>
+                    </Grid>
+                </Box>
+
                 <CreateWatchlistDialog
                     open={dialogOpen}
                     onClose={handleCloseDialog}
                     onSubmit={handleCreateWatchlist}
                     submitting={submitting}
                 />
-                <RenderWatchlists />
+                <RenderWatchlists count={watchlistCount} />
 
             </Container>
             <Footer />

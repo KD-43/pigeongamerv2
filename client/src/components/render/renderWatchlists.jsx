@@ -2,13 +2,19 @@ import { useNavigate } from 'react-router';
 import { useWatchlists } from '../../hooks/watchlists/useWatchlists';
 import { useDeleteWatchlist } from '../../hooks/watchlists/useDeleteWatchlist';
 import { Box, Typography, CircularProgress } from '@mui/material';
+import { useEffect } from 'react';
 import List from "../List";
 
-export default function RenderWatchlists () {
+export default function RenderWatchlists ({ count }) {
     const { watchlists, loading, error, setWatchlists, refetch } = useWatchlists();
     const { execute: deleteExecute, targetWatchlistId, loading: deleteLoading, error: deleteError } = useDeleteWatchlist();
     const navigate = useNavigate();
     console.log('Watchlists: ', watchlists);
+
+    useEffect(() => {
+        if (!watchlists || !count) return null;
+        count(watchlists.length);
+    }, [watchlists])
 
     const handleDeleteWatchlist = async (id) => {
         console.log("[HANDLE DELETE WATCHLIST]: id -", id);
@@ -55,13 +61,15 @@ export default function RenderWatchlists () {
     };
 
     return (
-        <List 
-            items={watchlists}
-            actionLabel="View More"
-            onAction={(i) => handleDeleteWatchlist(watchlists[i].id)}
-            onItemClick={(i) => navigate(`/watchlists/${watchlists[i].id}`)}
-            version={'tertiary'}
-            sx={{ my: 56, }}
-        />
+        <>
+            <List
+                items={watchlists}
+                actionLabel="View More"
+                onAction={(i) => handleDeleteWatchlist(watchlists[i].id)}
+                onItemClick={(i) => navigate(`/watchlists/${watchlists[i].id}`)}
+                version={'tertiary'}
+                sx={{ my: 56, }}
+            />
+        </>
     );
 }

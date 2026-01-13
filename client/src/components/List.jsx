@@ -398,15 +398,15 @@ export default function List({ title, items = [], actionLabel = 'View All', onAc
                     </Grid>
 
                     <Grid size={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <Typography>{item.itemCount ? item.itemCount : '' }</Typography>
+                        <Typography>{item.itemCount ? item.itemCount : 0 }</Typography>
                     </Grid>
 
                     <Grid size={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         <Typography>{item.hasDrop ? item.dropCount : '-' }</Typography>
                     </Grid>
 
-                    <Grid size={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <IconButton onClick={onAction ? (e) => { e.stopPropagation(); onAction(i)} : undefined}><Delete /></IconButton>
+                    <Grid size={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', '&:hover': { backgroundColor: 'secondary'} }}>
+                        <IconButton onClick={onAction ? (e) => { e.stopPropagation(); onAction(i)} : undefined}><Delete color={'secondary'} /></IconButton>
                     </Grid>
 
                   </Grid>

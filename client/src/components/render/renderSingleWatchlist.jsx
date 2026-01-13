@@ -99,7 +99,7 @@ export default function RenderSingleWatchlist ({ watchlist, watchlistStatus, del
                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
                     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', px: 2, py: 1, backgroundColor: 'tertiary.main', borderRadius: 8, }}>
                         <Typography variant="body1" fontWeight={'900'}>
-                            {watchlist.items.length} items being tracked
+                            {watchlist.items.length} {watchlist ? watchlist.items.length > 1 ? 'items' : 'item' : 'items'} being tracked
                         </Typography>
                     </Box>
                 </Box>
