@@ -12,7 +12,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Menu from '@mui/material/Menu';
 
 const Search = styled('div')(({ theme, bgColor, width }) => ({
-  position: 'relative',
+  position: 'relative ',
   borderRadius: '56px',
   backgroundColor: bgColor ? bgColor : theme.palette.background.default,
   '&:hover': {
@@ -35,6 +35,9 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   color: theme.palette.primary.main,
+  '&:hover': {
+    border: '3px solid black'
+  }
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -77,17 +80,17 @@ export default function Searchbar({ bgColor, width }) {
   };
 
   return (
-    <Search bgColor={bgColor} width={width}>
-      <SearchIconWrapper>
-          <SearchIcon sx={{  }}/>
-      </SearchIconWrapper>
-      <StyledInputBase
-          placeholder="Search…"
-          inputProps={{ 'aria-label': 'search' }}
-          onKeyDown={handleSearchEnter}
-          onChange={(e) => setSearchTerm(e.target.value)} 
-          value={searchTerm}
-      />
-    </Search>
+      <Search bgColor={bgColor} width={width}>
+        <SearchIconWrapper>
+            <SearchIcon sx={{  }}/>
+        </SearchIconWrapper>
+        <StyledInputBase
+            placeholder="Search…"
+            inputProps={{ 'aria-label': 'search' }}
+            onKeyDown={handleSearchEnter}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            value={searchTerm}
+        />
+      </Search>
   );
 }
