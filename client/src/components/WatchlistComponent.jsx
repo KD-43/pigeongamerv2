@@ -29,7 +29,7 @@ export default function Watchlist ({ title, items = [], actionLabel = 'View All'
     };
 
     const priceChangeBg = (priceChange) => {
-        if (priceChange === null) return tertiary;
+        if (priceChange === null || priceChange === "unknown") return tertiary;
 
         switch (priceChange) {
             case "down":
@@ -43,7 +43,7 @@ export default function Watchlist ({ title, items = [], actionLabel = 'View All'
 
     const priceChangeColor = (priceChange) => {
         console.log("priceChange", priceChange);
-        if (priceChange === null) return black;
+        if (priceChange === null || priceChange === "unknown") return black;
 
         if (priceChange !== "same") {
             return white;
@@ -59,27 +59,6 @@ export default function Watchlist ({ title, items = [], actionLabel = 'View All'
             </Box>
         );
     }
-
-    const RenderUIUpdateAvailability = ({ item, index }) => {
-        if (!item || item === undefined || item === null) return null;
-        if (item.ui === undefined || item.ui === null) return null;
-        switch (item.ui.updateAvailable) {
-            case true:
-                return (
-                    <Button onClick={() => handleModalOpen(index)} variant={'outlined-gray'} fullWidth size={'medium'} sx={{ height: '100%', flexGrow: 1, whiteSpace: 'nowrap', display: 'flex', gap: 1, alignItems: 'space-between', justifyContent: 'center' }}>
-                        <Typography fontWeight={'900'} fontSize={'clamp(9px, 0.5vw, 12px)'} color='primary.main'>New Deal</Typography>
-                    </Button>
-                );
-            case false:
-                return (
-                    <Clear sx={{ color: 'tertiary.main'}} />
-                );
-            default:
-                return (
-                    <Clear sx={{ color: 'tertiary.main'}} />
-                );
-        };
-    };
 
     return (
         <>
@@ -111,8 +90,8 @@ export default function Watchlist ({ title, items = [], actionLabel = 'View All'
                                     
                                 })}
                             >
-                                <Grid container spacing={2} sx={{ }}>
-                                    <Grid size={2} sx={{
+                                <Grid container spacing={3} sx={{ }}>
+                                    <Grid size={3} sx={{
                                         // maxWidth: 128,
                                         minWidth: 0,
                                         display: 'flex',
@@ -128,7 +107,7 @@ export default function Watchlist ({ title, items = [], actionLabel = 'View All'
                                             <Typography variant="body1" color={priceChangeColor(item.priceChange)} fontWeight={'bold'} textAlign={'center'}>{item.currentPrice ? freeOrNah(item.currentPrice) : freeOrNah(item.lastSeenPrice)}</Typography>
                                         </Box>
                                     </Grid>
-                                    <Grid size={4} sx={{ display: 'flex', gap: 1, }}>
+                                    <Grid size={5} sx={{ display: 'flex', gap: 1, }}>
                                         <Button onClick={onItemClick ? () => onItemClick(i) : undefined} variant={'black'} size={'medium'} sx={{ whiteSpace: 'nowrap', flexWrap: 'nowrap', display: 'flex', gap: 1, alignItems: 'space-between', justifyContent: 'center'}}>
                                             <Typography fontWeight={'900'} fontSize={'clamp(9px, 0.5vw, 12px)'}>
                                                 Go to page
@@ -142,10 +121,7 @@ export default function Watchlist ({ title, items = [], actionLabel = 'View All'
                                             <OpenInNew sx={{}} />
                                         </Button>
                                     </Grid>
-                                    <Grid size={3} sx={{ flexGrow: 1, flexWrap: 'nowrap', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                                        <RenderUIUpdateAvailability item={item} index={i} />
-                                    </Grid>
-                                    <Grid size={1} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                    <Grid size={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                         <IconButton onClick={() => deleteItem(item.gameID)}><Delete /></IconButton>
                                     </Grid>
                                 </Grid>

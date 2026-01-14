@@ -47,35 +47,44 @@ export default function Watchlists () {
         }
     };
 
+    const maxLists = {
+        backgroundColor: 'secondary.main', color: 'tertiary.main'
+    }
+
+    const lowLists = {
+        backgroundColor: 'primary.main', color: 'tertiary.main'
+    }
+
     return (
         <>
             <Container sx={{ paddingTop: 7, minHeight: '100vh', }}>
                 <Navbar />
                 <Grid container spacing={1} sx={{ justifyContent: 'start', alignItems: 'center', mt: 7, }}>
                     <Box sx={{ display: 'inline-flex', justifyItems: 'start', }}>
-                        <Typography variant={'h3'} color={'primary.main'} fontWeight={'900'}>Your Watchlists</Typography>
-                    </Box>
-                    <Box sx={{ marginLeft: 1, }}>
-                        <Button onClick={handleOpenDialog} variant={'contained'} size="large" sx={{ display: 'flex', justifyContent: 'space-between', gap: 1, }}>Create One <AddCircleOutline /></Button>
+                        <Typography variant={'h2'} color={'black'} fontWeight={'900'}>Your Watchlists</Typography>
                     </Box>
                 </Grid>
 
                 <Box container sx={{ mt: 2, mb: 5, display: 'flex', justifyContent: 'start', gap: 3, }}>
                     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
-                        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', px: 2, py: 1, backgroundColor: 'tertiary.main', borderRadius: 8, }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', px: 2, py: 1,  ...(isWatchlistCount >= 10 ? maxLists : lowLists), borderRadius: 8, }}>
                             <Typography variant="body1" fontWeight={'900'}>
-                                You have {isWatchlistCount} { isWatchlistCount ? isWatchlistCount > 1 ? 'Watchlists' : 'Watchlist' : 'Watchlists'  }
+                                You have <span style={{ color: isWatchlistCount >= 10 ? null : theme.palette.black.default }}>{isWatchlistCount}/10</span> { isWatchlistCount ? isWatchlistCount > 1 ? 'Watchlists' : 'Watchlist' : 'Watchlists'  }
                             </Typography>
                         </Box>
                     </Box>
+                    <Box sx={{ marginLeft: 1, }}>
+                        <Button disabled={isWatchlistCount >= 10 ? true : false} onClick={handleOpenDialog} variant={'contained'} size="large" sx={{ display: 'flex', justifyContent: 'space-between', gap: 1, }}>Create One <AddCircleOutline /></Button>
+                    </Box>
+                    
                 </Box>
-                <Box sx={{ backgroundColor: theme.palette.tertiary.main, borderRadius: 40, height: 48, width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', px: 3, py: 2,  }}>
-                    <Grid container spacing={1} sx={{}}>
-                        <Grid size={4} sx={{ display: 'grid', placeItems: 'start'}}><Typography variant="body1" fontWeight={'900'}>LIST NAME</Typography></Grid>
-                        <Grid size={2} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body1" fontWeight={'900'}>CREATED/UPDATED</Typography></Grid>
-                        <Grid size={2} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body1" fontWeight={'900'}>ITEMS</Typography></Grid>
-                        <Grid size={2} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body1" fontWeight={'900'}>CHANGES</Typography></Grid>
-                        <Grid size={2} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body1" fontWeight={'900'}>DELETE</Typography></Grid>
+                <Box sx={{ backgroundColor: theme.palette.tertiary.main, color: 'primary.main', borderRadius: 40, height: 48, width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', px: 3, py: 2,  }}>
+                    <Grid container spacing={3} sx={{}}>
+                        <Grid size={4} sx={{ display: 'grid', placeItems: 'start'}}><Typography variant="body2" fontWeight={'900'}>LIST NAME</Typography></Grid>
+                        <Grid size={2} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body2" fontWeight={'900'}>CREATED/UPDATED</Typography></Grid>
+                        <Grid size={2} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body2" fontWeight={'900'}>ITEMS</Typography></Grid>
+                        <Grid size={2} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body2" fontWeight={'900'}>CHANGES</Typography></Grid>
+                        <Grid size={2} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body2" fontWeight={'900'}>DELETE</Typography></Grid>
                     </Grid>
                 </Box>
 

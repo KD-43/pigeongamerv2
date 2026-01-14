@@ -43,7 +43,6 @@ export default function SingleWatchlistPage () {
         try {
             setWatchlist(prev => {
                 const newArr = prev.items.filter(i => i.gameID !== gameID);
-                if (newArr.length === 0) return prev;
                 return { ...prev, items: newArr };
             });
             await executeDeleteItem(watchlist.id, gameID);

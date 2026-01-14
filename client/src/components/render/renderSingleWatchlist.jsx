@@ -97,9 +97,9 @@ export default function RenderSingleWatchlist ({ watchlist, watchlistStatus, del
             </Box>
             <Box sx={{ mt: 2, mb: 5, display: 'flex', justifyContent: 'start', gap: 3, }}>
                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', px: 2, py: 1, backgroundColor: 'tertiary.main', borderRadius: 8, }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', px: 2, py: 1, backgroundColor: 'primary.main', color: 'background.default', borderRadius: 8, }}>
                         <Typography variant="body1" fontWeight={'900'}>
-                            {watchlist.items.length} {watchlist ? watchlist.items.length > 1 ? 'items' : 'item' : 'items'} being tracked
+                            {watchlist.items.length} {watchlist ? watchlist.items.length !== 1 ? 'items' : 'item' : 'items'} being tracked
                         </Typography>
                     </Box>
                 </Box>
@@ -118,12 +118,11 @@ export default function RenderSingleWatchlist ({ watchlist, watchlistStatus, del
                 </Box>
             </Box>
             <Box sx={{ backgroundColor: theme.palette.tertiary.main, borderRadius: 40, height: 48, width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', px: 3, py: 2,  }}>
-                <Grid container spacing={1} sx={{}}>
-                    <Grid size={2} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body1" fontWeight={'900'}>TITLE</Typography></Grid>
-                    <Grid size={2} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body1" fontWeight={'900'}>PRICE</Typography></Grid>
-                    <Grid size={4} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body1" fontWeight={'900'}>LINKS</Typography></Grid>
-                    <Grid size={3} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body1" fontWeight={'900'}>ACTION</Typography></Grid>
-                    <Grid size={1}></Grid>
+                <Grid container spacing={3} sx={{ color: 'primary.main' }}>
+                    <Grid size={3} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body2" fontWeight={'900'}>TITLE</Typography></Grid>
+                    <Grid size={2} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body2" fontWeight={'900'}>CURRENT PRICE</Typography></Grid>
+                    <Grid size={5} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body2" fontWeight={'900'}>LINKS</Typography></Grid>
+                    <Grid size={2} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body2" fontWeight={'900'}>DELETE</Typography></Grid>
                 </Grid>
             </Box>
             <Watchlist
