@@ -42,7 +42,6 @@ export const getSpecificWatchlist = async (req, res, next) => {
 
         const now = new Date();
 
-        const TRACKED_STALE_MS = 15 * 60 * 1000;
         const CANDIDATE_STALE_MS = 1 * 60 * 1000;
 
         const isStale = (d, staleMs) => {
@@ -51,50 +50,6 @@ export const getSpecificWatchlist = async (req, res, next) => {
             const t = new Date(d).getTime();
             return Number.isFinite(t) ? (Date.now() - t > staleMs) : true;
         }
-
-        const resolveTracked = async (item) => {
-            if (!item.dealID) {
-                return {
-                    dealID: null,
-                    storeID: item.storeID ?? null,
-                    currentPrice: null,
-                    source: "untracked",
-                };
-            };
-
-            const forceRefresh = isStale(item.lastSeenAt, TRACKED_STALE_MS);
-            // console.log('forceRefresh: ', forceRefresh);
-
-            try {
-                const response = await getDealById(item.dealID, req.signal, { forceRefresh });
-                if (!response) return {
-                    dealID: item.dealID,
-                    storeID: item.storeID ?? null,
-                    currentPrice: null,
-                    source: "tracked_missing",
-                };
-                const deal = response.gameInfo;
-
-                return {
-                    dealID: item.dealID ?? null,
-                    storeID: deal?.storeID ?? item.storeID ?? null,
-                    retailPrice: deal?.retailPrice ?? item.retailPrice ?? null,
-                    currentPrice: 
-                        deal?.salePrice !== null && deal?.salePrice !== undefined 
-                        ? Number(deal?.salePrice) 
-                        : null,
-                    source: forceRefresh ? "tracked_forceRefresh" : 'tracked_cache',
-                };
-            } catch (err) {
-                console.error(`[tracked] Error fetching cheapest deal for dealID "${item.dealID}": `, err.message);
-                return {
-                    dealID: item.dealID,
-                    storeID: item.storeID ?? null,
-                    currentPrice: null,
-                    source: "tracked_error",
-                };
-            }
-        };
 
         const resolveCandidate = async (item) => {
             console.log("[resolveCandidate] ENTER", {
@@ -175,19 +130,14 @@ export const getSpecificWatchlist = async (req, res, next) => {
 
         console.log("[getSpecificWatchlist] items length", items.length);
 
-        const [ trackedResults, candidateResults ] = await Promise.all([
-            Promise.all(items.map(resolveTracked)),
-            Promise.all(items.map(resolveCandidate)),
-        ])
+        const candidateResults = await Promise.all(items.map(resolveCandidate));
 
         // console.log('candidateResults: ', candidateResults);
 
         const responseItems = items.map((item, index) => {
-            const tracked = trackedResults[index];
             const candidate = candidateResults[index];
-            console.log('[tracked]: ', tracked);
 
-            const trackedPrice = tracked?.currentPrice ?? null;
+            const candidatePrice = candidate?.currentPrice ?? null;
             const lastSeenPrice = 
                 item.lastSeenPrice !== null && item.lastSeenPrice !== undefined ? 
                 Number(item.lastSeenPrice) 
@@ -198,43 +148,22 @@ export const getSpecificWatchlist = async (req, res, next) => {
 
             if (!item.dealID) {
                 priceChange = "untracked";
-            } else if (trackedPrice === null) {
+            } else if (candidatePrice === null) {
                 priceChange = "unknown";
             } else if (lastSeenPrice === null) {
                 priceChange = "new";
-            } else if (trackedPrice !== lastSeenPrice) {
-                priceChange = trackedPrice < lastSeenPrice ? "down" : "up";
-                delta = trackedPrice - lastSeenPrice;
+            } else if (candidatePrice !== lastSeenPrice) {
+                priceChange = candidatePrice < lastSeenPrice ? "down" : "up";
+                delta = candidatePrice - lastSeenPrice;
             }
 
-            if (trackedPrice !== null) {
-                item.lastSeenPrice = trackedPrice;
+            if (candidatePrice !== null) {
+                item.lastSeenPrice = candidatePrice;
                 item.lastSeenAt = now;
             };
 
-            if (candidate) {
-                item.candidateDealID = candidate.dealID ?? null;
-                item.candidateStoreID = candidate.storeID ?? null;
-                item.candidatePrice = 
-                    candidate.currentPrice !== null && candidate.currentPrice !== undefined 
-                        ? Number(candidate.currentPrice)
-                        : null;
-                if (candidate.didFetch) item.candidateSeenAt = now;
-            }
-
-            const candidatePrice = candidate?.currentPrice ?? null;
-
-            const cheaperDealAvailable =
-                item.dealID &&
-                candidate?.dealID &&
-                candidate.dealID !== item.dealID &&
-                trackedPrice !== null &&
-                candidatePrice !== null &&
-                candidatePrice < trackedPrice;
-            
-            const hasTrackedPriceChange = priceChange === "up" || priceChange === "down" || priceChange === "new";
-            const shouldShowPriceChange = hasTrackedPriceChange;
-            const shouldShowUpdate = Boolean(cheaperDealAvailable);
+            const hasCandidatePriceChange = priceChange === "up" || priceChange === "down" || priceChange === "new";
+            const shouldShowPriceChange = hasCandidatePriceChange;
 
             return {
                 gameID: item.gameID,
@@ -242,25 +171,13 @@ export const getSpecificWatchlist = async (req, res, next) => {
                 storeID: item.storeID ?? null,
                 dealID: item.dealID ?? null,
                 lastSeenPrice,
-                retailPrice: tracked.retailPrice,
-                currentPrice: trackedPrice,
+                retailPrice: candidate.retailPrice,
+                currentPrice: candidatePrice,
                 priceChange,
                 delta,
-                trackedSource: tracked?.source ?? "none",
-
-                candidate: candidate
-                    ? {
-                        dealID: candidate.dealID ?? null,
-                        storeID: candidate.storeID ?? null,
-                        currentPrice: candidate.currentPrice ?? null,
-                        source: candidate.source,
-                        lastCheckedAt: item.candidateSeenAt ?? null,
-                    }
-                    : null,
                 
                 ui: {
                     priceChanged: shouldShowPriceChange,
-                    updateAvailable: shouldShowUpdate,
                 }
             };
         });
@@ -350,9 +267,6 @@ export const addItemToWatchlist = async (req, res, next) => {
             lastSeenPrice: null,
             lastSeenAt: null,
             candidateDealID: null,
-            candidateStoreID: null,
-            candidatePrice: null,
-            candidateSeenAt: null,
         });
 
         const savedList = await list.save();
@@ -515,6 +429,7 @@ export const getWatchlistsSummary = async (req, res, next) => {
                 hasDrop: dropCount > 0,
                 droppedItems,
                 updatedAt,
+                items,
             };
         });
 

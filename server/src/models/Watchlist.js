@@ -9,11 +9,6 @@ const watchlistItemSchema = new Schema({
 
     lastSeenPrice: { type: Number, default: null },
     lastSeenAt: { type: Date, default: null },
-    
-    candidateDealID: { type: String, default: null },
-    candidateStoreID: { type: String, default: null },
-    candidatePrice: { type: Number, default: null },
-    candidateSeenAt: { type: Date, default: null }
 }, { _id: false });
 
 const watchlistSchema = new Schema({
