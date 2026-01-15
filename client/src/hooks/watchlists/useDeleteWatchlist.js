@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { deleteWatchlist } from '../../services/watchlists';
 
 export function useDeleteWatchlist () {
@@ -6,13 +6,19 @@ export function useDeleteWatchlist () {
     const [ loading, setIsLoading ] = useState(false);
     const [ error, setError ] = useState(null);
 
-    const execute = useCallback( async (watchlistId) => {
+    useEffect(() => {
+
+        console.log("targetWatchlistId: ", targetWatchlistId);
+    }, [ targetWatchlistId ]);
+
+    const execute = useCallback( async (id) => {
         try {
             setIsLoading(true);
             setError(null);
+            console.log('[ EXECUTE DELETE WATCHLIST HOOK ] - targetWatchlistId: ', id);
 
-            const data = await deleteWatchlist(watchlistId);
-            setTargetWatchlistId(watchlistId);
+            const data = await deleteWatchlist(id);
+            if (!data) throw new Error("Error in deletion", err);
             return data;
         } catch (err) {
             const message = err.response?.data?.error || err.message;
@@ -23,5 +29,5 @@ export function useDeleteWatchlist () {
         }
     }, []);
 
-  return { execute, targetWatchlistId, loading, error };
+  return { execute, targetWatchlistId, setTargetWatchlistId, loading, error };
 }

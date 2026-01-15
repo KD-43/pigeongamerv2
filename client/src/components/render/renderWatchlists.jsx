@@ -2,13 +2,16 @@ import { useNavigate } from 'react-router';
 import { useWatchlists } from '../../hooks/watchlists/useWatchlists';
 import { useDeleteWatchlist } from '../../hooks/watchlists/useDeleteWatchlist';
 import { Box, Typography, CircularProgress } from '@mui/material';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import List from "../List";
+import SimpleModal from '../util/simpleTemplateModalComponent';
 
 export default function RenderWatchlists ({ count }) {
     const { watchlists, loading, error, setWatchlists, refetch } = useWatchlists();
-    const { execute: deleteExecute, targetWatchlistId, loading: deleteLoading, error: deleteError } = useDeleteWatchlist();
+    const { execute: deleteExecute, targetWatchlistId, setTargetWatchlistId, loading: deleteLoading, error: deleteError } = useDeleteWatchlist();
     const navigate = useNavigate();
+    const [ isModalOpen, setIsModalOpen ] = useState(false);
+    const [ isDeleting, setIsDeleting ] = useState(false);
     console.log('Watchlists: ', watchlists);
 
     useEffect(() => {
@@ -16,25 +19,43 @@ export default function RenderWatchlists ({ count }) {
         count(watchlists.length);
     }, [watchlists])
 
-    const handleDeleteWatchlist = async (id) => {
-        console.log("[HANDLE DELETE WATCHLIST]: id -", id);
-        if (!id) return null;
+    const handleDeleteWatchlist = async () => {
+        console.log("[HANDLE DELETE WATCHLIST]: targetWatchlistId -", targetWatchlistId);
+        if (targetWatchlistId === undefined || targetWatchlistId === null) return null;
+        if (!watchlists) return null;
+
+        setIsDeleting(true);
 
         setWatchlists(prev => {
             if (!prev) return null;
 
             console.log('isArray?', Array.isArray(watchlists), watchlists);
-            const newList = watchlists.filter(i => i.id !== id);
+            const newList = watchlists.filter(i => i.id !== targetWatchlistId);
             return newList;
         });
 
         try {
-            await deleteExecute(id);
+            await deleteExecute(targetWatchlistId);
         } catch (err) {
             console.error(err);
             refetch();
-        };
+        } finally {
+            setIsModalOpen(false);
+            setIsDeleting(false);
+        }
     }
+
+    const handleOpenModal = (index) => {
+        if (isDeleting) return null;
+        if (!watchlists) return null;
+        setIsModalOpen(true);
+        setTargetWatchlistId(watchlists[index].id)
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setIsDeleting(false);
+    };
 
     if (error || deleteError) {
         return (
@@ -62,10 +83,19 @@ export default function RenderWatchlists ({ count }) {
 
     return (
         <>
+            <SimpleModal 
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                content = {{ title: 'Delete Watchlist?', body: 'Doing so is irreversible.', abort: 'Cancel', cta: 'DELETE' }}
+                onSubmit={() => handleDeleteWatchlist()}
+                formId = 'simple-modal-form'
+                // children={}
+                disableSubmit={isDeleting}
+            />
             <List
                 items={watchlists}
                 actionLabel="View More"
-                onAction={(i) => handleDeleteWatchlist(watchlists[i].id)}
+                onAction={(i) => handleOpenModal(i)}
                 onItemClick={(i) => navigate(`/watchlists/${watchlists[i].id}`)}
                 version={'tertiary'}
                 sx={{ my: 56, }}
