@@ -7,11 +7,13 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useTheme } from '@mui/material';
+import Typography from '@mui/material/Typography';
 
 export default function SimpleModal({ 
     isOpen,
     onClose,
     content = { title: 'Title', body: 'Body', abort: 'Cancel', cta: 'OK' },
+    styles = { bgColor: '', titleColor: 'primary.main', bodyColor: 'black.default', cancelVariant: 'square-gray', ctaVariant: 'square-secondary' },
     onSubmit,
     formId = 'simple-modal-form',
     children,
@@ -26,11 +28,11 @@ export default function SimpleModal({
     const hasSubmit = Boolean(onSubmit);
 
     return (
-        <Dialog open={isOpen} onClose={onClose} maxWidth={maxWidth} fullWidth={fullWidth} slotProps={{ paper: { sx: { borderRadius: '10px' }} }}>
-            {title ? <DialogTitle sx={{ fontWeight: '900', color: theme.palette.primary.main, pb: 1, }}>{title}</DialogTitle> : null}
+        <Dialog open={isOpen} onClose={onClose} maxWidth={maxWidth} fullWidth={fullWidth} slotProps={{ paper: { sx: { borderRadius: '10px', backgroundColor: styles.bgColor, }} }}>
+            {title ? <DialogTitle fontWeight={'900'} sx={{ color: styles.titleColor, pb: 1, }}>{title}</DialogTitle> : null}
 
             <DialogContent>
-            {body ? <DialogContentText sx={{ pb: 2, }}>{body}</DialogContentText> : null}
+            {body ? <DialogContentText sx={{ pb: 2, color: styles.bodyColor }}>{body}</DialogContentText> : null}
 
             {hasSubmit ? (
                 <form id={formId} onSubmit={onSubmit}>
@@ -42,10 +44,10 @@ export default function SimpleModal({
             </DialogContent>
 
             <DialogActions sx={{ pb: 2, px: 3, }}>
-                <Button variant='square-gray' onClick={onClose}>{abort}</Button>
+                <Button variant={styles.cancelVariant} onClick={onClose}>{abort}</Button>
 
                 {hasSubmit ? (
-                    <Button type="submit" form={formId} variant="square-secondary" disabled={disableSubmit}>
+                    <Button type="submit" form={formId} variant={styles.ctaVariant} disabled={disableSubmit}>
                         {cta}
                     </Button>
                 ) : null}

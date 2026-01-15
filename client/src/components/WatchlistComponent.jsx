@@ -122,7 +122,7 @@ export default function Watchlist ({ title, items = [], actionLabel = 'View All'
                                         </Button>
                                     </Grid>
                                     <Grid size={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                        <IconButton onClick={() => deleteItem(item.gameID)}><Delete /></IconButton>
+                                        <IconButton onClick={() => deleteItem(i)}><Delete /></IconButton>
                                     </Grid>
                                 </Grid>
                             </Box>

@@ -342,6 +342,7 @@ export const deleteWatchlist = async (req, res, next) => {
     try {
         const userId = req.anonUserId;
         const { id } = req.params;
+        console.log('[ SERVER FUNCTION - DELETE WATCHLIST ]', id);
         if (!mongoose.isValidObjectId(id)) {
             return res.status(400).json({ error: 'Invalid watchlist id' });
         };

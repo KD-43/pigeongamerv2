@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Container, Grid, Box, Typography, useTheme, Button, Stack, CircularProgress } from '@mui/material';
 import { Link, useParams } from 'react-router';
 import { useSingleWatchlist } from '../hooks/watchlists/useSingleWatchlist';
@@ -14,6 +14,7 @@ import RenderSingleWatchlist from '../components/render/renderSingleWatchlist';
 import { useDeleteItemFromWatchlist } from '../hooks/watchlists/useDeleteItemFromWatchlist';
 import { useReplaceWatchlistItem } from '../hooks/watchlists/useReplaceWatchlistItem';
 import { useUpdateWatchlistName } from '../hooks/watchlists/useUpdateWatchlistName';
+import SimpleModal from '../components/util/simpleTemplateModalComponent';
 
 
 export default function SingleWatchlistPage () {
@@ -21,6 +22,9 @@ export default function SingleWatchlistPage () {
     const { freeOrNah, storeName, dayConvert, monthConvertName, timeConvert, } = apiConversion();
     const theme = useTheme();
     const params = useParams();
+    const [ isModalOpen, setIsModalOpen ] = useState(false);
+    const [ isDeleting, setIsDeleting ] = useState(false);
+    const [ gameIDToDelete, setGameIDToDelete ] = useState('');
 	const watchlistId = params.watchlistId;
 	const { watchlist, loading: watchlistLoading, error: watchlistError, setWatchlist, refetch } = useSingleWatchlist(watchlistId);
     const { execute: executeDeleteItem, loading: deleteLoading, error: deleteError } = useDeleteItemFromWatchlist();
@@ -31,14 +35,13 @@ export default function SingleWatchlistPage () {
     const statusOfReplaceCallback = { replaceIsLoading, replaceError };
     const statusOfRenameCallback = { renameIsLoading, renameError };
 
-    useEffect(() => {
-        console.log('SingleWatchlistPage mounted');
-        return () => console.log('SingleWatchlistPage unmounted');
-    }, []);
-
     const handleDeleteItemFromWatchlist = async (gameID) => {
         if (!watchlist) return;
-        if (!gameID) return;
+        if (gameID < 0) return;
+
+        console.log('[ handleDeleteItem ] - gameID: ', gameID);
+
+        setIsDeleting(true);
         
         try {
             setWatchlist(prev => {
@@ -50,6 +53,10 @@ export default function SingleWatchlistPage () {
 
         } catch (err) {
             console.error('Delete failed: ', err);
+        } finally {
+            setIsModalOpen(false);
+            setIsDeleting(false);
+            setGameIDToDelete('');
         }
     };
 
@@ -75,15 +82,39 @@ export default function SingleWatchlistPage () {
             console.error("Rename failed: ", err);
         }
     };
+
+    const handleOpenModal = (index) => {
+        if (isDeleting) return null;
+        if (!watchlist) return null;
+        setIsModalOpen(true);
+        setGameIDToDelete(watchlist.items[index].gameID);
+        // console.log('[ MODAL OPEN ] - index', index)
+        // console.log(`Modal made it! Object at index ${index}: `, watchlist.items[index]);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setIsDeleting(false);
+        setGameIDToDelete('');
+    };
     
     return (
         <>
             <Container sx={{ paddingTop: 7, paddingBottom: 20, minHeight: '100vh', }}>
                 <Navbar />
+                <SimpleModal 
+                    isOpen={isModalOpen}
+                    onClose={handleCloseModal}
+                    content = {{ title: 'Delete Title from Watchlist?', body: 'Doing so is irreversible.', abort: 'Cancel', cta: 'DELETE' }}
+                    onSubmit={() => handleDeleteItemFromWatchlist(gameIDToDelete)}
+                    formId = 'simple-modal-form'
+                    // children={}
+                    disableSubmit={isDeleting}
+                />
                 <RenderSingleWatchlist 
                     watchlist={watchlist} 
                     watchlistStatus={statusOfWatchlist}
-                    deleteCallback={handleDeleteItemFromWatchlist} 
+                    deleteCallback={handleOpenModal}
                     deleteCallbackStatus={statusOfDeleteCallback}
                     replaceCallback={handleReplaceItem} 
                     replaceCallbackStatus={statusOfReplaceCallback}
