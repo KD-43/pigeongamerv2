@@ -24,6 +24,7 @@ export default function SingleWatchlistPage () {
     const params = useParams();
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const [ isDeleting, setIsDeleting ] = useState(false);
+    const [ isDeleteTitle, setIsDeleteTitle ] = useState('title');
     const [ gameIDToDelete, setGameIDToDelete ] = useState('');
 	const watchlistId = params.watchlistId;
 	const { watchlist, loading: watchlistLoading, error: watchlistError, setWatchlist, refetch } = useSingleWatchlist(watchlistId);
@@ -88,6 +89,7 @@ export default function SingleWatchlistPage () {
         if (!watchlist) return null;
         setIsModalOpen(true);
         setGameIDToDelete(watchlist.items[index].gameID);
+        setIsDeleteTitle(watchlist.items[index].title);
         // console.log('[ MODAL OPEN ] - index', index)
         // console.log(`Modal made it! Object at index ${index}: `, watchlist.items[index]);
     };
@@ -96,7 +98,17 @@ export default function SingleWatchlistPage () {
         setIsModalOpen(false);
         setIsDeleting(false);
         setGameIDToDelete('');
+        setIsDeleteTitle('Title');
     };
+
+    const RenderModalBody = () => {
+        return (
+            <>
+                <Typography>Deleting <span style={{ fontWeight: 'bold', color: theme.palette.secondary.main }}>{isDeleteTitle ? isDeleteTitle : 'Title'}</span>.</Typography>
+                <Typography>Doing so is irreversible.</Typography>
+            </>
+        )
+    }
     
     return (
         <>
@@ -105,7 +117,7 @@ export default function SingleWatchlistPage () {
                 <SimpleModal 
                     isOpen={isModalOpen}
                     onClose={handleCloseModal}
-                    content = {{ title: 'Delete Title from Watchlist?', body: 'Doing so is irreversible.', abort: 'Cancel', cta: 'DELETE' }}
+                    content = {{ title: 'Delete Title from Watchlist?', body: <RenderModalBody />, abort: 'Cancel', cta: 'DELETE' }}
                     onSubmit={() => handleDeleteItemFromWatchlist(gameIDToDelete)}
                     formId = 'simple-modal-form'
                     // children={}

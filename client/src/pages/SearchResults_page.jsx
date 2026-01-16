@@ -57,22 +57,21 @@ export default function SearchResults () {
                 <Navbar />
                 <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', flexGrow: 1, justifyContent: 'space-between', }}>
                     <Grid container sx={{ alignItems: 'center', justifyContent: 'center', mt: 4, }}>
-                        <Grid container spacing={1} size={8} sx={{ backgroundColor: 'primary.main', color: 'tertiary.main', borderRadius: 20, }}>
+                        <Grid container spacing={1} size={8} sx={{ color: 'secondary.main', }}>
                             
-                            <Grid size={12} sx={{ display: 'flex', justifyContent: 'start', pl: 3, py: 1, }}>
-                                <Typography variant={'h6'} fontWeight={'900'}>Results for:</Typography>
-                                <Typography variant={'h6'} fontWeight={'900'} sx={{ ml: 2 }}>"{query.toString().trim()}"</Typography>
+                            <Grid size={12} sx={{ display: 'flex', justifyContent: 'center', }}>
+                                <Typography variant={'h5'} fontWeight={'900'}>Results for:</Typography>
+                                <Typography variant={'h5'} fontWeight={'900'} sx={{ ml: 2 }}>"{query.toString().trim()}"</Typography>
                             </Grid>
                         </Grid>
+                        <Box sx={{ backgroundColor: theme.palette.tertiary.main, borderRadius: 40, height: 48, width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', px: 3, py: 2, mt: 5, }}>
+                            <Grid container spacing={1} sx={{ justifyContent: 'space-between'}}>
+                                <Grid size={2} sx={{ display: 'grid', placeItems: 'start'}}><Typography variant="body1" fontWeight={'900'}>TITLE</Typography></Grid>
+                                <Grid size={7} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body1" fontWeight={'900'}>STORE</Typography></Grid>
+                                <Grid size={2} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body1" fontWeight={'900'}>PRICE | DISCOUNT</Typography></Grid>
+                            </Grid>
+                        </Box>
                     </Grid>
-
-                    <Box sx={{ backgroundColor: theme.palette.tertiary.main, borderRadius: 40, height: 48, width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', px: 3, py: 2, mt: 5, }}>
-                    <Grid container spacing={1} sx={{ justifyContent: 'space-between'}}>
-                            <Grid size={2} sx={{ display: 'grid', placeItems: 'start'}}><Typography variant="body1" fontWeight={'900'}>TITLE</Typography></Grid>
-                            <Grid size={7} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body1" fontWeight={'900'}>STORE</Typography></Grid>
-                            <Grid size={2} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body1" fontWeight={'900'}>PRICE | DISCOUNT</Typography></Grid>
-                        </Grid>
-                    </Box>
 
                     <RenderSearchResults results={queryDeals ? queryDeals.results : []} loading={loading} error={error} />
 

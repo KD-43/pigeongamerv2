@@ -52,11 +52,6 @@ export const getSpecificWatchlist = async (req, res, next) => {
         }
 
         const resolveCandidate = async (item) => {
-            console.log("[resolveCandidate] ENTER", {
-                title: item.title,
-                candidateSeenAt: item.candidateSeenAt,
-                candidateDealID: item.candidateDealID,
-            });
 
             const forceRefresh = isStale(item.candidateSeenAt, CANDIDATE_STALE_MS);
 
