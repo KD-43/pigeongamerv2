@@ -55,9 +55,20 @@ export default function Watchlist ({ title, items = [], actionLabel = 'View All'
     if (items.length === 0) {
         return (
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '50vh', marginTop: 18, }}>
-                <Typography>Your watchlist is empty. Add titles!</Typography>
+                <Typography variant='h4' fontWeight={'900'} color={'tertiary.main'}>Your watchlist is empty. Add titles!</Typography>
             </Box>
         );
+    }
+
+    const RenderDealGone = (title) => {
+        const game = title ? title : 'Title';
+        return (
+            <Grid size={10} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <Typography variant='h6' fontWeight={'900'} color='tertiary.main'>Deal for {game} is gone.</Typography>
+                </Box>
+            </Grid>
+        )
     }
 
     return (
@@ -87,40 +98,43 @@ export default function Watchlist ({ title, items = [], actionLabel = 'View All'
                                 sx={(theme) => ({
                                     px: 3,
                                     py: 2,
+                                    backgroundColor: item.dealID ? '' : 'secondary.main',
                                     
                                 })}
                             >
                                 <Grid container spacing={3} sx={{ }}>
-                                    <Grid size={3} sx={{
-                                        // maxWidth: 128,
-                                        minWidth: 0,
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        whiteSpace: 'nowrap'
-                                    }}>
-                                        <Typography sx={{ nowrap: 'true', overflow: 'hidden', textOverflow: 'ellipsis', }}>
-                                        {item.title ? item.title : ''}
-                                        </Typography>
-                                    </Grid>
-                                    <Grid size={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                        <Box sx={{ minWidth: 82, backgroundColor: priceChangeBg(item.priceChange), borderRadius: '40px', pt: '6px', pb: '3px', px: '16px', margin: 0 }}>
-                                            <Typography variant="body1" color={priceChangeColor(item.priceChange)} fontWeight={'bold'} textAlign={'center'}>{item.currentPrice ? freeOrNah(item.currentPrice) : freeOrNah(item.lastSeenPrice)}</Typography>
-                                        </Box>
-                                    </Grid>
-                                    <Grid size={5} sx={{ display: 'flex', gap: 1, }}>
-                                        <Button onClick={onItemClick ? () => onItemClick(i) : undefined} variant={'black'} size={'medium'} sx={{ whiteSpace: 'nowrap', flexWrap: 'nowrap', display: 'flex', gap: 1, alignItems: 'space-between', justifyContent: 'center'}}>
-                                            <Typography fontWeight={'900'} fontSize={'clamp(9px, 0.5vw, 12px)'}>
-                                                Go to page
+                                    {item.dealID ? <>
+                                        <Grid size={3} sx={{
+                                            // maxWidth: 128,
+                                            minWidth: 0,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            whiteSpace: 'nowrap'
+                                        }}>
+                                            <Typography sx={{ nowrap: 'true', overflow: 'hidden', textOverflow: 'ellipsis', }}>
+                                            {item.title ? item.title : ''}
                                             </Typography>
-                                            <InfoOutline /> 
-                                        </Button>
-                                        <Button LinkComponent={"a"} href={`https://www.cheapshark.com/redirect?dealID=${item.dealID}`} target="_blank" rel="noopener noreferrer" variant={'contained'} size={'medium'} sx={{ flexGrow: 1, whiteSpace: 'nowrap', display: 'flex', gap: 1, alignItems: 'space-between', justifyContent: 'center' }}>
-                                            <Typography fontWeight={'900'} fontSize={'clamp(9px, 0.5vw, 12px)'}>
-                                                {item.storeID ? storeName(item.storeID) : '' }
-                                            </Typography>
-                                            <OpenInNew sx={{}} />
-                                        </Button>
-                                    </Grid>
+                                        </Grid>
+                                        <Grid size={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                            <Box sx={{ minWidth: 82, backgroundColor: priceChangeBg(item.priceChange), borderRadius: '40px', pt: '6px', pb: '3px', px: '16px', margin: 0 }}>
+                                                <Typography variant="body1" color={priceChangeColor(item.priceChange)} fontWeight={'bold'} textAlign={'center'}>{item.currentPrice ? freeOrNah(item.currentPrice) : freeOrNah(item.lastSeenPrice)}</Typography>
+                                            </Box>
+                                        </Grid>
+                                        <Grid size={5} sx={{ display: 'flex', gap: 1, }}>
+                                            <Button onClick={onItemClick ? () => onItemClick(i) : undefined} variant={'black'} size={'medium'} sx={{ whiteSpace: 'nowrap', flexWrap: 'nowrap', display: 'flex', gap: 1, alignItems: 'space-between', justifyContent: 'center'}}>
+                                                <Typography fontWeight={'900'} fontSize={'clamp(9px, 0.5vw, 12px)'}>
+                                                    Go to page
+                                                </Typography>
+                                                <InfoOutline />
+                                            </Button>
+                                            <Button LinkComponent={"a"} href={`https://www.cheapshark.com/redirect?dealID=${item.dealID}`} target="_blank" rel="noopener noreferrer" variant={'contained'} size={'medium'} sx={{ flexGrow: 1, whiteSpace: 'nowrap', display: 'flex', gap: 1, alignItems: 'space-between', justifyContent: 'center' }}>
+                                                <Typography fontWeight={'900'} fontSize={'clamp(9px, 0.5vw, 12px)'}>
+                                                    {item.storeID ? storeName(item.storeID) : '' }
+                                                </Typography>
+                                                <OpenInNew sx={{}} />
+                                            </Button>
+                                        </Grid>
+                                    </> : RenderDealGone(item.title ? item.title : '')}
                                     <Grid size={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                         <IconButton onClick={() => deleteItem(i)}><Delete /></IconButton>
                                     </Grid>

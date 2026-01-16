@@ -13,7 +13,7 @@ export default function SimpleModal({
     isOpen,
     onClose,
     content = { title: 'Title', body: 'Body', abort: 'Cancel', cta: 'OK' },
-    styles = { bgColor: '', titleColor: 'primary.main', bodyColor: 'black.default', cancelVariant: 'square-gray', ctaVariant: 'square-secondary' },
+    styles = { titleSize: null, bgColor: '', titleColor: 'primary.main', bodyColor: 'black.default', cancelVariant: 'square-gray', ctaVariant: 'square-secondary' },
     onSubmit,
     formId = 'simple-modal-form',
     children,
@@ -29,7 +29,7 @@ export default function SimpleModal({
 
     return (
         <Dialog open={isOpen} onClose={onClose} maxWidth={maxWidth} fullWidth={fullWidth} slotProps={{ paper: { sx: { borderRadius: '10px', backgroundColor: styles.bgColor, }} }}>
-            {title ? <DialogTitle fontWeight={'900'} sx={{ color: styles.titleColor, pb: 1, }}>{title}</DialogTitle> : null}
+            {title ? <DialogTitle fontWeight={'900'} sx={{ fontSize: styles.titleSize ? styles.titleSize : null, color: styles.titleColor ? styles.titleColor : 'primary.main', pb: 1, }}>{title}</DialogTitle> : null}
 
             <DialogContent>
             {body ? <DialogContentText sx={{ pb: 2, color: styles.bodyColor }}>{body}</DialogContentText> : null}
@@ -44,10 +44,10 @@ export default function SimpleModal({
             </DialogContent>
 
             <DialogActions sx={{ pb: 2, px: 3, }}>
-                <Button variant={styles.cancelVariant} onClick={onClose}>{abort}</Button>
+                <Button variant={styles.cancelVariant ? styles.cancelVariant : 'square-gray'} onClick={onClose}>{abort}</Button>
 
                 {hasSubmit ? (
-                    <Button type="submit" form={formId} variant={styles.ctaVariant} disabled={disableSubmit}>
+                    <Button type="submit" form={formId} variant={styles.ctaVariant ? styles.ctaVariant : 'square-secondary'} disabled={disableSubmit}>
                         {cta}
                     </Button>
                 ) : null}
