@@ -183,7 +183,27 @@ export const theme = createTheme({
                     }),
                 },
             ]
-        }
+        },
+        MuiAlert: {
+            styleOverrides: {
+                filledSuccess: {
+                    backgroundColor: '#009688',
+                    color: '#F1F1F1',
+                },
+                filledError: {
+                    backgroundColor: '#D500F9',
+                    color: '#F1F1F1',
+                },
+                filledWarning: {
+                    backgroundColor: '#663c00',
+                    color: '#F1F1F1',
+                },
+                filledInfo: {
+                    backgroundColor: '#0b3c5d',
+                    color: '#F1F1F1',
+                },
+            },
+        },
     },
 
     breakpoints: {

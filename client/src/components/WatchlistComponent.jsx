@@ -136,7 +136,7 @@ export default function Watchlist ({ title, items = [], actionLabel = 'View All'
                                         </Grid>
                                     </> : RenderDealGone(item.title ? item.title : '')}
                                     <Grid size={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                        <IconButton onClick={() => deleteItem(i)}><Delete /></IconButton>
+                                        <IconButton onClick={(e) =>{ e.stopPropagation(); deleteItem(i);}}><Delete /></IconButton>
                                     </Grid>
                                 </Grid>
                             </Box>

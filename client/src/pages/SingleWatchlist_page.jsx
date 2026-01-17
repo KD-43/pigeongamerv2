@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Container, Grid, Box, Typography, useTheme, Button, Stack, CircularProgress } from '@mui/material';
+import { useCallback, useEffect, useState } from 'react';
+import { Container, Grid, Box, Typography, useTheme, Button, Stack, CircularProgress, Portal } from '@mui/material';
 import { Link, useParams } from 'react-router';
 import { useSingleWatchlist } from '../hooks/watchlists/useSingleWatchlist';
 import Navbar from '../components/Navbar';
@@ -15,6 +15,7 @@ import { useDeleteItemFromWatchlist } from '../hooks/watchlists/useDeleteItemFro
 import { useReplaceWatchlistItem } from '../hooks/watchlists/useReplaceWatchlistItem';
 import { useUpdateWatchlistName } from '../hooks/watchlists/useUpdateWatchlistName';
 import SimpleModal from '../components/util/simpleTemplateModalComponent';
+import BottomCenterAlert from '../components/render/renderAlertFeedback';
 
 
 export default function SingleWatchlistPage () {
@@ -26,6 +27,9 @@ export default function SingleWatchlistPage () {
     const [ isDeleting, setIsDeleting ] = useState(false);
     const [ isDeleteTitle, setIsDeleteTitle ] = useState('title');
     const [ gameIDToDelete, setGameIDToDelete ] = useState('');
+    const [ alertOpen, setAlertOpen ] = useState(false);
+    const [ deleteSeverity, setDeleteSeverity ] = useState('info');
+    const [ didDelete, setDidDelete ] = useState(false);
 	const watchlistId = params.watchlistId;
 	const { watchlist, loading: watchlistLoading, error: watchlistError, setWatchlist, refetch } = useSingleWatchlist(watchlistId);
     const { execute: executeDeleteItem, loading: deleteLoading, error: deleteError } = useDeleteItemFromWatchlist();
@@ -35,6 +39,15 @@ export default function SingleWatchlistPage () {
     const statusOfDeleteCallback = { deleteLoading, deleteError };
     const statusOfReplaceCallback = { replaceIsLoading, replaceError };
     const statusOfRenameCallback = { renameIsLoading, renameError };
+
+    useEffect(() => {
+        console.log('SingleWatchlistPage mounted');
+        return () => console.log('SingleWatchlistPage unmounted');
+    }, []);
+
+    useEffect(() => {
+        console.log('alert open changed:', alertOpen);
+    }, [alertOpen]);
 
     const handleDeleteItemFromWatchlist = async (gameID) => {
         if (!watchlist) return;
@@ -51,9 +64,10 @@ export default function SingleWatchlistPage () {
             });
             await executeDeleteItem(watchlist.id, gameID);
             // await refetch();
-
+            setDeleteSeverity('success');
         } catch (err) {
-            console.error('Delete failed: ', err);
+            // console.error('Delete failed: ', err);
+            setDeleteSeverity('error');
         } finally {
             setIsModalOpen(false);
             setIsDeleting(false);
@@ -98,7 +112,6 @@ export default function SingleWatchlistPage () {
         setIsModalOpen(false);
         setIsDeleting(false);
         setGameIDToDelete('');
-        setIsDeleteTitle('Title');
     };
 
     const RenderModalBody = () => {
@@ -109,6 +122,13 @@ export default function SingleWatchlistPage () {
             </>
         )
     }
+
+    const deleteAlertFeedbackMessage = {
+        success: `${isDeleteTitle} successfully deleted from watchlist!`, 
+        info: "This is a filled info Alert.",
+        warning: "Something unexpected happened.",
+        error: `Something went wrong. Unable to delete ${isDeleteTitle} from watchlist. Try again soon.`,
+    };
     
     return (
         <>
@@ -133,6 +153,9 @@ export default function SingleWatchlistPage () {
                     renameCallback={handleRenameWatchlist}
                     renameCallbackStatus={statusOfRenameCallback}
                 />
+                <Box sx={{ display: 'relative'}}>
+                    <BottomCenterAlert open={alertOpen} onClose={() => setAlertOpen(false)} />
+                </Box>
             </Container>
             <Footer />
         </>
