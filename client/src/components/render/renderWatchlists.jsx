@@ -1,23 +1,30 @@
 import { useNavigate } from 'react-router';
 import { useWatchlists } from '../../hooks/watchlists/useWatchlists';
 import { useDeleteWatchlist } from '../../hooks/watchlists/useDeleteWatchlist';
-import { Box, Typography, CircularProgress } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { Box, Typography, CircularProgress, } from '@mui/material';
+import { useEffect, useState, } from 'react';
 import List from "../List";
 import SimpleModal from '../util/simpleTemplateModalComponent';
+import BottomCenterAlert from './renderAlertFeedback';
 
-export default function RenderWatchlists ({ count }) {
+export default function RenderWatchlists ({ count, deleteStatus, deleteAlert }) {
     const { watchlists, loading, error, setWatchlists, refetch } = useWatchlists();
     const { execute: deleteExecute, targetWatchlistId, setTargetWatchlistId, loading: deleteLoading, error: deleteError } = useDeleteWatchlist();
     const navigate = useNavigate();
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const [ isDeleting, setIsDeleting ] = useState(false);
+    const [ didDelete, setDidDelete ] = useState(false);
     console.log('Watchlists: ', watchlists);
 
     useEffect(() => {
         if (!watchlists || !count) return null;
         count(watchlists.length);
     }, [watchlists])
+
+    useEffect(() => {
+        if (didDelete === undefined || didDelete === null) return null;
+        deleteStatus(didDelete);
+    }, [ didDelete ]);
 
     const handleDeleteWatchlist = async () => {
         console.log("[HANDLE DELETE WATCHLIST]: targetWatchlistId -", targetWatchlistId);
@@ -36,12 +43,14 @@ export default function RenderWatchlists ({ count }) {
 
         try {
             await deleteExecute(targetWatchlistId);
+            setDidDelete(true);
         } catch (err) {
-            console.error(err);
+            setDidDelete(false);
             refetch();
         } finally {
             setIsModalOpen(false);
             setIsDeleting(false);
+            deleteAlert();
         }
     }
 
@@ -57,7 +66,7 @@ export default function RenderWatchlists ({ count }) {
         setIsDeleting(false);
     };
 
-    if (error || deleteError) {
+    if (error) {
         return (
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '75vh' }}>
                 <Typography variant='h4' color='secondary.main' fontWeight={'bold'}>Error: {error}</Typography>

@@ -9,6 +9,7 @@ import Footer from '../components/FooterComponent';
 import Searchbar from '../components/Searchbar';
 import RenderWatchlists from '../components/render/renderWatchlists';
 import { CreateWatchlistDialog } from '../components/util/dialogComponent';
+import BottomCenterAlert from '../components/render/renderAlertFeedback';
 
 export default function Watchlists () {
 
@@ -16,6 +17,8 @@ export default function Watchlists () {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [ isWatchlistCount, setIsWatchlistCount ] = useState(0);
+    const [ alertOpen, setAlertOpen ] = useState(false);
+    const [ deleteSeverity, setDeleteSeverity ] = useState('info');
     const navigate = useNavigate();
     const { execute, watchlist, loading, error } = useCreateWatchlist();
 
@@ -46,6 +49,37 @@ export default function Watchlists () {
             setSubmitting(false);
         }
     };
+
+    const handleDeleteStatus = (deleteStatus) => {
+        if (deleteStatus === undefined || deleteStatus === null) return;
+        console.log("deleteStatus: ", deleteStatus);
+
+        switch (deleteStatus) {
+            case true:
+                setDeleteSeverity('success');
+                // setAlertOpen(true);
+                break;
+            case false:
+                setDeleteSeverity('error');
+                // setAlertOpen(true);
+                break;
+            default:
+                setDeleteSeverity('warning');
+                // setAlertOpen(true);
+                break;
+        };
+    };
+
+    const handleOpenAlertForDelete = () => {
+        setAlertOpen(true);
+    }
+
+    const deleteAlertFeedbackMessage = {
+        success: "Watchlist successfully deleted!", 
+        info: "This is a filled info Alert.",
+        warning: "Something unexpected happened.",
+        error: "Something went wrong. Unable to delete watchlist. Try again soon.",
+    }
 
     const maxLists = {
         backgroundColor: 'secondary.main', color: 'tertiary.main'
@@ -94,8 +128,12 @@ export default function Watchlists () {
                     onSubmit={handleCreateWatchlist}
                     submitting={submitting}
                 />
-                <RenderWatchlists count={watchlistCount} />
+                <RenderWatchlists count={watchlistCount} deleteStatus={handleDeleteStatus} deleteAlert={handleOpenAlertForDelete} />
 
+                <Box sx={{ display: 'relative'}}>
+                    <BottomCenterAlert open={alertOpen} onClose={() => setAlertOpen(false)} severity={deleteSeverity} message={deleteAlertFeedbackMessage} />
+                </Box>
+                
             </Container>
             <Footer />
         </>
