@@ -11,7 +11,7 @@ import { CreateWatchlistDialog } from './util/dialogComponent';
 import LoadingRender from './render/loadingRender';
 import ErrorRender from './render/errorCodeRender';
 
-export default function BgImg ({ payload, width, height = 500, py, }) {
+export default function BgImg ({ payload, width, height = 500, py, alertFeedback }) {
     const theme = useTheme();
     console.log('payload', payload);
     const [ dialogOpen, setDialogOpen ] = useState(false);
@@ -36,8 +36,10 @@ export default function BgImg ({ payload, width, height = 500, py, }) {
             await executeCreateWatchlist(name);
             const updateList = await refetch();
             setWatchlists(updateList);
+            alertFeedback('create', 'success');
         } catch (err) {
             console.error(err);
+            alertFeedback('create', 'error');
         } finally {
             setSubmitting(false);
             setDialogOpen(false);
@@ -164,6 +166,7 @@ export default function BgImg ({ payload, width, height = 500, py, }) {
                                         loading={loading}
                                         error={error}
                                         onCreateNew={handleOpenDialog}
+                                        alertFeedback={alertFeedback}
                                     />
                                 </Grid>
                                 <Grid size={6} sx={{ alignContent: 'end' }}>

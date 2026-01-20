@@ -25,11 +25,10 @@ export default function SingleWatchlistPage () {
     const params = useParams();
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const [ isDeleting, setIsDeleting ] = useState(false);
-    const [ isDeleteTitle, setIsDeleteTitle ] = useState('title');
+    const [ isDeleteTitle, setIsDeleteTitle ] = useState('Title');
     const [ gameIDToDelete, setGameIDToDelete ] = useState('');
     const [ alertOpen, setAlertOpen ] = useState(false);
     const [ deleteSeverity, setDeleteSeverity ] = useState('info');
-    const [ didDelete, setDidDelete ] = useState(false);
 	const watchlistId = params.watchlistId;
 	const { watchlist, loading: watchlistLoading, error: watchlistError, setWatchlist, refetch } = useSingleWatchlist(watchlistId);
     const { execute: executeDeleteItem, loading: deleteLoading, error: deleteError } = useDeleteItemFromWatchlist();
@@ -49,9 +48,16 @@ export default function SingleWatchlistPage () {
         console.log('alert open changed:', alertOpen);
     }, [alertOpen]);
 
+    // useEffect(() => {
+    //     if (!didDelete) console.log("Delete Button not clicked!", didDelete);
+    //     console.log("Delete Button Clicked!", didDelete);
+    //     if (didDelete) setAlertOpen(true);
+    //     console.log("alertOpen: ", alertOpen);
+    // }, [ didDelete ]);
+
     const handleDeleteItemFromWatchlist = async (gameID) => {
         if (!watchlist) return;
-        if (gameID < 0) return;
+        if (!gameID) return;
 
         console.log('[ handleDeleteItem ] - gameID: ', gameID);
 
@@ -65,6 +71,7 @@ export default function SingleWatchlistPage () {
             await executeDeleteItem(watchlist.id, gameID);
             // await refetch();
             setDeleteSeverity('success');
+            console.log("Hello?");
         } catch (err) {
             // console.error('Delete failed: ', err);
             setDeleteSeverity('error');
@@ -73,6 +80,13 @@ export default function SingleWatchlistPage () {
             setIsDeleting(false);
             setGameIDToDelete('');
         }
+    };
+
+    const handleDeleteItemSubmit = (e) => {
+        e.preventDefault();
+        console.log("[Delete submit clicked!]");
+        handleDeleteItemFromWatchlist(gameIDToDelete);
+        setAlertOpen(true);
     };
 
     const handleReplaceItem = async (gameID, candidate) => {
@@ -101,6 +115,7 @@ export default function SingleWatchlistPage () {
     const handleOpenModal = (index) => {
         if (isDeleting) return null;
         if (!watchlist) return null;
+        console.log("[handleDelete] Index: ", index);
         setIsModalOpen(true);
         setGameIDToDelete(watchlist.items[index].gameID);
         setIsDeleteTitle(watchlist.items[index].title);
@@ -138,7 +153,7 @@ export default function SingleWatchlistPage () {
                     isOpen={isModalOpen}
                     onClose={handleCloseModal}
                     content = {{ title: 'Delete Title from Watchlist?', body: <RenderModalBody />, abort: 'Cancel', cta: 'DELETE' }}
-                    onSubmit={() => handleDeleteItemFromWatchlist(gameIDToDelete)}
+                    onSubmit={(e) => handleDeleteItemSubmit(e)}
                     formId = 'simple-modal-form'
                     // children={}
                     disableSubmit={isDeleting}
@@ -153,10 +168,10 @@ export default function SingleWatchlistPage () {
                     renameCallback={handleRenameWatchlist}
                     renameCallbackStatus={statusOfRenameCallback}
                 />
-                <Box sx={{ display: 'relative'}}>
-                    <BottomCenterAlert open={alertOpen} onClose={() => setAlertOpen(false)} />
-                </Box>
             </Container>
+            <Portal>
+                <BottomCenterAlert open={alertOpen} onClose={() => setAlertOpen(false)} severity={deleteSeverity} message={deleteAlertFeedbackMessage} />
+            </Portal>
             <Footer />
         </>
     )

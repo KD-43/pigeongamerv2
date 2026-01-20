@@ -4,7 +4,7 @@ import RenderSpecificDeal from "./renderSpecificDeal";
 import ErrorRender from "./errorCodeRender";
 import LoadingRender from "./loadingRender";
 
-export default function RenderSpecificDealContent ({ gamePayload, cheapestDealEver, otherDeals, loading, error }) {
+export default function RenderSpecificDealContent ({ gamePayload, cheapestDealEver, otherDeals, loading, error, alertFeedback }) {
 
     const theme = useTheme();
 
@@ -27,7 +27,7 @@ export default function RenderSpecificDealContent ({ gamePayload, cheapestDealEv
 
     return (
         <>
-            <RenderSpecificDeal gamePayload={gamePayload} cheapestDealEver={cheapestDealEver} />
+            <RenderSpecificDeal gamePayload={gamePayload} cheapestDealEver={cheapestDealEver} alertFeedback={alertFeedback} />
             <RenderOtherDeals otherDeals={otherDeals} />
         </>
     )

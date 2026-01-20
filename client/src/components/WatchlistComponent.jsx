@@ -69,7 +69,13 @@ export default function Watchlist ({ title, items = [], actionLabel = 'View All'
                 </Box>
             </Grid>
         )
-    }
+    };
+
+    const handleDeleteButtonClicked = (e, index) => {
+        console.log("[Watchlist Component] Delete Button Index: ", index);
+        e.stopPropagation();
+        deleteItem(index);
+    };
 
     return (
         <>
@@ -136,7 +142,7 @@ export default function Watchlist ({ title, items = [], actionLabel = 'View All'
                                         </Grid>
                                     </> : RenderDealGone(item.title ? item.title : '')}
                                     <Grid size={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                        <IconButton onClick={(e) =>{ e.stopPropagation(); deleteItem(i);}}><Delete /></IconButton>
+                                        <IconButton onClick={(e) => handleDeleteButtonClicked(e, i)}><Delete /></IconButton>
                                     </Grid>
                                 </Grid>
                             </Box>

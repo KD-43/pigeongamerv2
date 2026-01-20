@@ -2,7 +2,7 @@ import { Grid, Box, Typography, Stack, } from '@mui/material';
 import BgImg from '../bgImgComponent';
 import apiConversion from '../../util/apiDataConversion';
 
-export default function RenderSpecificDeal ({ gamePayload, cheapestDealEver }) {
+export default function RenderSpecificDeal ({ gamePayload, cheapestDealEver, alertFeedback }) {
     const { freeOrNah, timeConvert } = apiConversion();
     const { price, date } = cheapestDealEver;
 
@@ -16,6 +16,7 @@ export default function RenderSpecificDeal ({ gamePayload, cheapestDealEver }) {
                     height={'350px'} 
                     py={3}
                     payload={gamePayload}
+                    alertFeedback={alertFeedback}
                 />
             </Grid>
             <Grid size={4}>

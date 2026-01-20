@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useCreateWatchlist } from '../hooks/watchlists/useCreateWatchlist';
 import { Link, useNavigate } from 'react-router'
-import { Box, Button, Container, Grid, Typography, useTheme, CircularProgress } from '@mui/material';
+import { Box, Button, Container, Grid, Typography, useTheme, CircularProgress, Portal } from '@mui/material';
 import { AddCircleOutline } from '@mui/icons-material';
 import Navbar from "../components/Navbar";
 import List from "../components/List";
@@ -128,13 +128,11 @@ export default function Watchlists () {
                     onSubmit={handleCreateWatchlist}
                     submitting={submitting}
                 />
-                <RenderWatchlists count={watchlistCount} deleteStatus={handleDeleteStatus} deleteAlert={handleOpenAlertForDelete} />
-
-                <Box sx={{ display: 'relative'}}>
-                    <BottomCenterAlert open={alertOpen} onClose={() => setAlertOpen(false)} severity={deleteSeverity} message={deleteAlertFeedbackMessage} />
-                </Box>
-                
+                <RenderWatchlists count={watchlistCount} deleteStatus={handleDeleteStatus} deleteAlert={handleOpenAlertForDelete} />        
             </Container>
+            <Portal>
+                <BottomCenterAlert open={alertOpen} onClose={() => setAlertOpen(false)} severity={deleteSeverity} message={deleteAlertFeedbackMessage} />
+            </Portal>
             <Footer />
         </>
     )
