@@ -53,31 +53,32 @@ export const getSpecificWatchlist = async (req, res, next) => {
 
         const resolveCandidate = async (item) => {
 
+            console.log("[resolveCandidate] item last seen at CHECK", item.lastSeenAt);
             const forceRefresh = isStale(item.candidateSeenAt, CANDIDATE_STALE_MS);
 
             console.log("[resolveCandidate] STALE CHECK", {
                 title: item.title,
                 forceRefresh,
-                ageMs: item.candidateSeenAt
-                ? Date.now() - new Date(item.candidateSeenAt).getTime()
+                ageMs: item.lastSeenAt
+                ? Date.now() - new Date(item.lastSeenAt).getTime()
                 : null,
             });
 
             if (!forceRefresh) {
                 console.log("[resolveCandidate] USING CACHE / SKIP FETCH", {
                     title: item.title,
-                    candidateDealID: item.candidateDealID,
+                    dealID: item.DealID,
                 });
 
-                if (!item.candidateDealID) return null;
+                if (!item.dealID) return null;
                 return {
-                    dealID: item.candidateDealID ?? null,
-                    storeID: item.candidateStoreID ?? null,
+                    dealID: item.dealID ?? null,
+                    storeID: item.storeID ?? null,
                     currentPrice:
-                        item.candidatePrice !== null && item.candidatePrice !== undefined
-                        ? Number(item.candidatePrice)
+                        item.lastSeenPrice !== null && item.lastSeenPrice !== undefined
+                        ? Number(item.lastSeenPrice)
                         : null,
-                    source: "candidate_cache",
+                    source: "stored_cache",
                     didFetch: false,
                     forceRefresh: false,
                 };
@@ -130,6 +131,8 @@ export const getSpecificWatchlist = async (req, res, next) => {
         // console.log('candidateResults: ', candidateResults);
 
         const responseItems = items.map((item, index) => {
+            console.log("[responseItem] candidateResultsCheck: ", candidateResults[index]);
+            console.log("[responseItem] trackedResultsCheck: ", item);
             const candidate = candidateResults[index];
 
             const candidatePrice = candidate?.currentPrice ?? null;
@@ -153,7 +156,6 @@ export const getSpecificWatchlist = async (req, res, next) => {
             }
 
             if (candidatePrice !== null) {
-                item.lastSeenPrice = candidatePrice;
                 item.lastSeenAt = now;
             };
 
