@@ -4,16 +4,24 @@ import FilledAlerts from '../util/alertFeedback';
 
 export default function BottomCenterAlert({ open, onClose, severity, message, autoHideMs = 6000}) {
 
+    useEffect(() => {
+        if (!open) return;
+
+        const timer = setTimeout(() => {
+            onClose();
+        }, autoHideMs);
+
+        return () => clearTimeout(timer);
+
+    }, [open, autoHideMs, onClose]);
+
     // useEffect(() => {
-    //     if (!open) return;
+    //     if (!open) console.log("[BotCenAlert] - alert is open:", open);
 
-    //     const timer = setTimeout(() => {
-    //         onClose();
-    //     }, autoHideMs);
-
-    //     return () => clearTimeout(timer);
-
-    // }, [open, autoHideMs, onClose]);
+    //     console.log("[BotCenAlert] - alert is open:", open);
+    //     console.log("[BotCenAlert] - severity:", severity);
+    //     console.log("[BotCenAlert] - message:", message);
+    // }, [ open, severity, message ])
 
     return (
         <Slide direction="up" in={open} mountOnEnter unmountOnExit>

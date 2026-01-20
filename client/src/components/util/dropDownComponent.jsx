@@ -23,9 +23,11 @@ export function DropdownButton({
     error,
     onCreateNew,
     fullWidth = true,
+    alertFeedback
 }) {
     const theme = useTheme();
     const [ open, setOpen ] = useState(false);
+    const [ isAdding, setIsAdding ] = useState(false);
     const buttonRef = useRef(null);
     const menuRef = useRef(null);
     const { execute, targetWatchlistId, loading: addItemLoading, error: addItemError  } = useAddItemToWatchlist();
@@ -64,8 +66,21 @@ export function DropdownButton({
         setOpen(prev => !prev);
     };
 
-    const handleAddToWatchlist = (id, payload) => {
-        execute(id, payload);
+    const handleAddToWatchlist = async (id, payload) => {
+        if (!id || !payload) {
+            alertFeedback('add', 'error');
+            return null;
+        };
+
+        setIsAdding(true);
+        try {
+            execute(id, payload);
+            alertFeedback('add', 'success');
+        } catch (err) {
+            alertFeedback('add', 'error');
+        } finally {
+            setIsAdding(false);
+        }
     };
 
     const isOpen = () => {

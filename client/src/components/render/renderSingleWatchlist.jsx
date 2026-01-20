@@ -16,6 +16,9 @@ export default function RenderSingleWatchlist ({ watchlist, watchlistStatus, del
     const { watchlistLoading, watchlistError } = watchlistStatus;
     const { replaceIsLoading, replaceError } = replaceCallbackStatus;
     const { renameIsLoading, renameError } = renameCallbackStatus;
+    const { deleteLoading } = deleteCallbackStatus
+    const contentLoading = { watchlistLoading, deleteLoading, replaceIsLoading };
+    const isContentLoading = Object.values(contentLoading).some(load => load === true);
 
     const MAX_LEN = 40;
 
@@ -70,13 +73,13 @@ export default function RenderSingleWatchlist ({ watchlist, watchlistStatus, del
         )
     };
     
-    if (watchlistLoading || replaceIsLoading || renameIsLoading) {
-        return (
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '75vh' }}>
-                <CircularProgress size={56} />
-            </Box>
-        )
-    };
+    // if (watchlistLoading || replaceIsLoading || renameIsLoading) {
+    //     return (
+    //         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '75vh' }}>
+    //             <CircularProgress size={56} />
+    //         </Box>
+    //     )
+    // };
 
     return (
         <>
@@ -90,16 +93,20 @@ export default function RenderSingleWatchlist ({ watchlist, watchlistStatus, del
                 disableSubmit={disableSubmit}
             />
             <Box sx={{ display: 'flex', gap: 3, justifyContent: 'start', alignItems: 'baseline', mt: 6, minWidth: 0 }}>
-                <Typography variant='h2' fontWeight={'900'} sx={{ minWidth: 0, color: 'black', whiteSpace: 'normal', overflowWrap: 'break-word'}}>{watchlist.name}</Typography>
-                <IconButton onClick={handleModalOpen} color="primary" sx={{ backgroundColor: 'tertiary.main', }}>
-                    <Edit size="medium" color="primary.main" />
-                </IconButton>
+                {watchlistLoading ? <CircularProgress size={56} /> :
+                    <>
+                        <Typography variant='h2' fontWeight={'900'} sx={{ minWidth: 0, color: 'black', whiteSpace: 'normal', overflowWrap: 'break-word'}}>{watchlist ? watchlist.name ? watchlist.name : '' : ''}</Typography>
+                        <IconButton onClick={handleModalOpen} color="primary" sx={{ backgroundColor: 'tertiary.main', }}>
+                            <Edit size="medium" color="primary.main" />
+                        </IconButton>
+                    </>
+                }
             </Box>
             <Box sx={{ mt: 2, mb: 5, display: 'flex', justifyContent: 'start', gap: 3, }}>
                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
                     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', px: 2, py: 1, backgroundColor: 'primary.main', color: 'background.default', borderRadius: 8, }}>
                         <Typography variant="body1" fontWeight={'900'}>
-                            {watchlist.items.length} {watchlist ? watchlist.items.length !== 1 ? 'items' : 'item' : 'items'} being tracked
+                            {watchlist ? watchlist.items.length ? watchlist.items.length : '0' : '0'} {watchlist ? watchlist.items.length !== 1 ? 'items' : 'item' : 'items'} being tracked
                         </Typography>
                     </Box>
                 </Box>
@@ -125,15 +132,20 @@ export default function RenderSingleWatchlist ({ watchlist, watchlistStatus, del
                     <Grid size={2} sx={{ display: 'grid', placeItems: 'center'}}><Typography variant="body2" fontWeight={'900'}>DELETE</Typography></Grid>
                 </Grid>
             </Box>
-            <Watchlist
-                items={watchlist.items}
-                actionLabel="View More"
-                deleteItem={deleteCallback}
-                deleteStatus={deleteCallbackStatus}
-                onItemClick={(i) => navigate(`/deals/details/${watchlist.items[i].dealID}`)}
-                replaceItem={replaceCallback}
-                sx={{ my: 56, }}
-            />
+            {isContentLoading ? 
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '75vh' }}>
+                    <CircularProgress size={56} />
+                </Box> : 
+                <Watchlist
+                    items={watchlist.items}
+                    actionLabel="View More"
+                    deleteItem={deleteCallback}
+                    deleteStatus={deleteCallbackStatus}
+                    onItemClick={(i) => navigate(`/deals/details/${watchlist.items[i].dealID}`)}
+                    replaceItem={replaceCallback}
+                    sx={{ my: 56, }}
+                />
+            }
         </>
     )
 }
