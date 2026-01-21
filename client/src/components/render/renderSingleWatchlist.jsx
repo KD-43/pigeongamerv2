@@ -141,7 +141,7 @@ export default function RenderSingleWatchlist ({ watchlist, watchlistStatus, del
                     actionLabel="View More"
                     deleteItem={deleteCallback}
                     deleteStatus={deleteCallbackStatus}
-                    onItemClick={(i) => navigate(`/deals/details/${watchlist.items[i].dealID}`)}
+                    onItemClick={(i) => navigate(`/deals/details/${encodeURIComponent(watchlist.items[i].dealID)}`)}
                     replaceItem={replaceCallback}
                     sx={{ my: 56, }}
                 />

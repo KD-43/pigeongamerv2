@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router';
 import {
   Card, CardHeader, CardContent, CardActions, Button, Divider, Stack, Box, alpha, darken, Typography, Grid, useTheme, IconButton
 } from '@mui/material';
-import { OpenInNew, Delete } from '@mui/icons-material';
+import { OpenInNew, Delete, Clear, Circle } from '@mui/icons-material';
 import apiConversion from '../util/apiDataConversion';
 import { useState } from 'react';
 import ErrorRender from './render/errorCodeRender';
@@ -373,6 +373,12 @@ export default function List({ title, items = [], actionLabel = 'View All', onAc
                             backgroundColor: theme.palette.background.default,
                             color: theme.palette.primary.main,
                           },
+                          '.itemChangeBg': {
+                            backgroundColor: theme.palette.background.default,
+                          },
+                          '.itemChangeText': {
+                            color: theme.palette.primary.main,
+                          },
 
                         }
                       : undefined,
@@ -388,7 +394,7 @@ export default function List({ title, items = [], actionLabel = 'View All', onAc
                       whiteSpace: 'nowrap'
 
                     }}>
-                        <Typography sx={{ nowrap: 'true', overflow: 'hidden', textOverflow: 'ellipsis', }}>
+                        <Typography fontWeight={'bold'} sx={{ nowrap: 'true', overflow: 'hidden', textOverflow: 'ellipsis', }}>
                           {item.name ? item.name : ''}
                         </Typography>
                     </Grid>
@@ -401,8 +407,45 @@ export default function List({ title, items = [], actionLabel = 'View All', onAc
                         <Typography>{item.itemCount ? item.itemCount : 0 }</Typography>
                     </Grid>
 
-                    <Grid size={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <Typography>{item.hasDrop ? item.dropCount : '-' }</Typography>
+                    <Grid size={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 0, }}>
+                        {item.hasDrop ?
+                          <Box
+                            sx={{
+                              height: '100%',
+                              minHeight: 0,
+                              display: 'grid',
+                              placeItems: 'center',
+                          }}
+                          >
+                          <Box
+                            className='itemChangeBg'
+                            sx={{
+                              display: 'grid',
+                              placeItems: 'center',
+                              height: 40,
+                              minWidth: 40,
+                              px: 1,
+                              borderRadius: '999px',
+                              bgcolor: 'primary.main',
+                            }}
+                          >
+                            <Typography
+                              className='itemChangeText'
+                              variant="body2"
+                              sx={{
+                                color: 'background.default',
+                                fontWeight: 800,
+                                lineHeight: 1,
+                                fontSize: 'clamp(0.75rem, 1.8vw, 0.95rem)',
+                                whiteSpace: 'nowrap',
+                              }}
+                            >
+                              {item.dropCount ? item.dropCount : '0'}
+                            </Typography>
+                          </Box>
+                          </Box> : 
+                          <Clear color='tertiary' />
+                        }
                     </Grid>
 
                     <Grid size={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', '&:hover': { backgroundColor: 'secondary'} }}>

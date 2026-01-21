@@ -21,7 +21,8 @@ export default function SpecificDeal () {
     const [ alertSeverity, setAlertSeverity ] = useState('info');
     const theme = useTheme();
     const params = useParams();
-    const dealId = params.dealId;
+    const dealId = decodeURIComponent(params.dealId);
+    console.log("[SpecificDealPage]", dealId ? dealId : 'not available');
     const { specificDeal, loading, error, setSpecificDeal } = useSpecificDeal(dealId);
 
     const gameInfo = specificDeal ? specificDeal.gameInfo : [];
