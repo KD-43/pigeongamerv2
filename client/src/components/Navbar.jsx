@@ -39,7 +39,7 @@ export default function Navbar({ }) {
 
           <Typography sx={{ mb: 2, }}>
             <Typography variant="h6" fontWeight={'900'} color="secondary.main">How It Works</Typography>
-            No account or login required
+            No account or login required.
             To keep things simple and privacy-friendly, this project uses a UUIDv4 generated on your first visit instead of traditional authentication. This allows you to create and manage watchlists without storing personal information.
           </Typography>
 

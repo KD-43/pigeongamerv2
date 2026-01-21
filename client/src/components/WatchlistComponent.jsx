@@ -43,7 +43,7 @@ export default function Watchlist ({ title, items = [], actionLabel = 'View All'
 
     const priceChangeColor = (priceChange) => {
         console.log("priceChange", priceChange);
-        if (priceChange === null || priceChange === "unknown") return black;
+        if (priceChange === null || priceChange === "unknown" || priceChange === "new") return black;
 
         if (priceChange !== "same") {
             return white;
