@@ -16,7 +16,7 @@ import { ExpandMore, AddCircleOutline } from '@mui/icons-material';
 import { useAddItemToWatchlist } from '../../hooks/watchlists/useAddItemToWatchlist';
 
 export function DropdownButton({
-    label = 'Add to Watchlist',
+    label = 'Add Game to Watchlist',
     items = [],
     payload,
     loading,

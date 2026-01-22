@@ -138,7 +138,7 @@ export default function BgImg ({ payload, width, height = 500, py, alertFeedback
                                     justifyContent: 'end',
                                 }}
                             >
-                                <Typography variant={'body1'} sx={{ fontWeight: 'bold', fontSize: 'clamp(1rem, 2vw, 2rem)', lineHeight: '1.2' }}>
+                                <Typography variant={'body1'} sx={{ fontWeight: '900', fontSize: 'clamp(1rem, 2vw, 2rem)', lineHeight: '1.2' }}>
                                     {name}
                                 </Typography>
                             </Box>

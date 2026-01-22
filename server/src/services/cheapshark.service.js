@@ -154,8 +154,13 @@ export async function getCheapestDealForTitle (title, signal, { forceRefresh = f
     const key = `title:${normTitle}`;
 
     if (!forceRefresh) {
+        console.log("[getCheapestDealForTitle] [1/2] forceRefresh false: Accessing cache");
         const cached = getCache(key);
-        if (cached) return cached;
+        if (cached) {
+            console.log("[getCheapestDealForTitle] [2/2] cached result is true, returning cache: ", cached);
+            return cached;
+        }
+        if (!cached) console.log("[getCheapestDealForTitle] [2/2] cached result is false, moving to fetch from Cheapshark");
     }
     
     const deals = await getDeals(
