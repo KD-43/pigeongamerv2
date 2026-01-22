@@ -42,140 +42,87 @@ export const getSpecificWatchlist = async (req, res, next) => {
 
         const now = new Date();
 
-        const CANDIDATE_STALE_MS = 1 * 60 * 1000;
-
-        const isStale = (d, staleMs) => {
-            // console.log('[isStale] d:', d);
-            if (!d) return true;
-            const t = new Date(d).getTime();
-            return Number.isFinite(t) ? (Date.now() - t > staleMs) : true;
-        }
-
-        const resolveCandidate = async (item) => {
-
-            console.log("[resolveCandidate] item last seen at CHECK", item.lastSeenAt);
-            const forceRefresh = isStale(item.candidateSeenAt, CANDIDATE_STALE_MS);
-
-            console.log("[resolveCandidate] STALE CHECK", {
-                title: item.title,
-                forceRefresh,
-                ageMs: item.lastSeenAt
-                ? Date.now() - new Date(item.lastSeenAt).getTime()
-                : null,
-            });
-
-            if (!forceRefresh) {
-                console.log("[resolveCandidate] USING CACHE / SKIP FETCH", {
-                    title: item.title,
-                    dealID: item.DealID,
-                });
-
-                if (!item.dealID) return null;
-                return {
-                    dealID: item.dealID ?? null,
-                    storeID: item.storeID ?? null,
-                    currentPrice:
-                        item.lastSeenPrice !== null && item.lastSeenPrice !== undefined
-                        ? Number(item.lastSeenPrice)
-                        : null,
-                    source: "stored_cache",
-                    didFetch: false,
-                    forceRefresh: false,
-                };
-            };
-
-            console.log("[resolveCandidate] FORCE REFRESH → FETCH", {
-                title: item.title,
-            });
+        const resolveCheapest = async (item) => {
 
             try {
-                const cheapest = await getCheapestDealForTitle(item.title, req.signal, { forceRefresh });
-
-                console.log("[resolveCandidate] FETCH RESULT", {
-                    title: item.title,
-                    cheapest,
-                });
+                const cheapest = await getCheapestDealForTitle(item.title, req.signal, { forceRefresh: false });
 
                 if (!cheapest) {
-                    console.log("[resolveCandidate] NO DEAL FOUND", { title: item.title });
-                    return { 
-                        dealID: null, 
-                        storeID: null, 
-                        currentPrice: null, 
-                        source: "candidate_none",
-                        forceRefresh: true,
-                        didFetch: true,
+                    return {
+                        dealID: null,
+                        storeID: null,
+                        currentPrice: null,
+                        normalPrice: null,
+                        redirectUrl: null,
+                        source: "service_none",
+                        didFetch: false,
                     };
                 };
 
+                console.log("[resolveCheapest - Try Block] cheapest: ", cheapest);
                 return {
                     dealID: cheapest.dealID ?? null,
                     storeID: cheapest.storeID ?? null,
-                    currentPrice: 
-                        cheapest.currentPrice !== null && cheapest.currentPrice !== undefined 
-                        ? Number(cheapest.currentPrice) 
-                        : null,
-                    source: "candidate_refresh",
-                    didFetch: true,
-                }
+                    currentPrice: Number.isFinite(cheapest.currentPrice) ? Number(cheapest.currentPrice) : null,
+                    normalPrice: Number.isFinite(cheapest.normalPrice) ? Number(cheapest.normalPrice) : null,
+                    redirectUrl: cheapest.redirectUrl ?? null,
+                    source: "service_cache_or_upstream",
+                };
             } catch (err) {
-                console.error(`[candidate] Error fetching cheapest deal for item title "${item.title}": `, err.message);
-                return null;
-            }
-        }
+                console.error(`[cheapest] Error for "${item.title}":`, err.message);
+                return {
+                    dealID: null,
+                    storeID: null,
+                    currentPrice: null,
+                    normalPrice: null,
+                    redirectUrl: null,
+                    source: "service_error",
+                };
+            };
+        };
 
-        console.log("[getSpecificWatchlist] items length", items.length);
-
-        const candidateResults = await Promise.all(items.map(resolveCandidate));
-
-        // console.log('candidateResults: ', candidateResults);
+        const results = await Promise.all(items.map(resolveCheapest));
 
         const responseItems = items.map((item, index) => {
-            console.log("[responseItem] candidateResultsCheck: ", candidateResults[index]);
-            console.log("[responseItem] trackedResultsCheck: ", item);
-            const candidate = candidateResults[index];
-
-            const candidatePrice = candidate?.currentPrice ?? null;
-            const lastSeenPrice = 
-                item.lastSeenPrice !== null && item.lastSeenPrice !== undefined ? 
-                Number(item.lastSeenPrice) 
+            console.log("[responseItems] resultsItem: ", results[index]);
+            const r = results[index];
+            const currPrice = r.currentPrice;
+            const prevPrice =
+                item.lastSeenPrice !== null && item.lastSeenPrice !== undefined
+                ? Number(item.lastSeenPrice)
                 : null;
 
-            let priceChange = 'same';
+            let priceChange = "same";
             let delta = 0;
 
-            if (!item.dealID) {
-                priceChange = "untracked";
-            } else if (candidatePrice === null) {
+            if (currPrice === null) {
                 priceChange = "unknown";
-            } else if (lastSeenPrice === null) {
+            } else if (prevPrice === null) {
                 priceChange = "new";
-            } else if (candidatePrice !== lastSeenPrice) {
-                priceChange = candidatePrice < lastSeenPrice ? "down" : "up";
-                delta = candidatePrice - lastSeenPrice;
+            } else if (currPrice !== prevPrice) {
+                priceChange = currPrice < prevPrice ? "down" : "up";
+                delta = currPrice - prevPrice;
             }
 
-            if (candidatePrice !== null) {
+            if (Number.isFinite(currPrice)) {
+                item.lastSeenPrice = currPrice;
                 item.lastSeenAt = now;
-            };
-
-            const hasCandidatePriceChange = priceChange === "up" || priceChange === "down" || priceChange === "new";
-            const shouldShowPriceChange = hasCandidatePriceChange;
+            }
 
             return {
-                gameID: item.gameID,
-                title: item.title,
-                storeID: item.storeID ?? null,
-                dealID: item.dealID ?? null,
-                lastSeenPrice,
-                retailPrice: candidate.retailPrice,
-                currentPrice: candidatePrice,
+                gameID: item.gameID ?? null,
+                title: item.title ?? null,
+                dealID: r.dealID ?? null,
+                storeID: r.storeID ?? null,
+                redirectUrl: r.redirectUrl ?? null,
+                retailPrice: r.normalPrice ?? null,
+                currentPrice: currPrice ?? null,
+                lastSeenPrice: prevPrice ?? null,
+                lastSeenAt: item.lastSeenAt ?? null,
                 priceChange,
                 delta,
-                
-                ui: {
-                    priceChanged: shouldShowPriceChange,
-                }
+                source: r.source,
+                ui: { priceChanged: priceChange !== "same" && priceChange !== "unknown" },
             };
         });
 
@@ -255,15 +202,13 @@ export const addItemToWatchlist = async (req, res, next) => {
             return res.status(409).json({ error: 'Item already in watchlist' });
         };
 
+        console.log("[addItemToWatchlistList]:", { gameID, title, });
+
         list.items.push({
             gameID,
-            title,
-            currentPrice: currentPrice,
-            dealID: dealID ?? null,
-            storeID: storeID || null,
+            title: title,
             lastSeenPrice: null,
             lastSeenAt: null,
-            candidateDealID: null,
         });
 
         const savedList = await list.save();
