@@ -41,6 +41,13 @@ export const getSpecificWatchlist = async (req, res, next) => {
         }
 
         const now = new Date();
+        const DB_WRITE_TTL_MS = 60 * 1000;
+
+        const isStale = (d, staleMs) => {
+            if (!d) return true;
+            const t = new Date(d).getTime();
+            return Number.isFinite(t) ? (Date.now() - t > staleMs) : true;
+        };
 
         const resolveCheapest = async (item) => {
 
@@ -85,12 +92,21 @@ export const getSpecificWatchlist = async (req, res, next) => {
 
         const responseItems = items.map((item, index) => {
             console.log("[responseItems] resultsItem: ", results[index]);
-            const r = results[index];
-            const currPrice = r.currentPrice;
+            console.log("[responseItems] mappedItem: ", item);
+            const r = results[index] ?? {};
+            const currPrice = r.currentPrice ?? null;
             const prevPrice =
                 item.lastSeenPrice !== null && item.lastSeenPrice !== undefined
                 ? Number(item.lastSeenPrice)
                 : null;
+            const isCadenceDue = isStale(item.lastSeenAt, DB_WRITE_TTL_MS);
+            const hasValidPrice = Number.isFinite(currPrice);
+            if (isCadenceDue && hasValidPrice) {
+                if (prevPrice === null || currPrice !== prevPrice) {
+                    item.lastSeenPrice = currPrice;
+                };
+                item.lastSeenAt = now;
+            }
 
             let priceChange = "same";
             let delta = 0;
@@ -102,11 +118,6 @@ export const getSpecificWatchlist = async (req, res, next) => {
             } else if (currPrice !== prevPrice) {
                 priceChange = currPrice < prevPrice ? "down" : "up";
                 delta = currPrice - prevPrice;
-            }
-
-            if (Number.isFinite(currPrice)) {
-                item.lastSeenPrice = currPrice;
-                item.lastSeenAt = now;
             }
 
             return {
@@ -121,7 +132,7 @@ export const getSpecificWatchlist = async (req, res, next) => {
                 lastSeenAt: item.lastSeenAt ?? null,
                 priceChange,
                 delta,
-                source: r.source,
+                source: r.source ?? "none",
                 ui: { priceChanged: priceChange !== "same" && priceChange !== "unknown" },
             };
         });
@@ -299,6 +310,7 @@ export const deleteWatchlist = async (req, res, next) => {
 };
 
 export const getWatchlistsSummary = async (req, res, next) => {
+    console.log("[getWatchlistSummary] HIT", req.originalUrl);
     try {
         const userId = req.anonUserId;
 

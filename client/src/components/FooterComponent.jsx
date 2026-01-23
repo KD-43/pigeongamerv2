@@ -46,10 +46,10 @@ export default function Footer() {
               Resources
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              <Link color="inherit" underline="hover" href="#">
+              <Link color="inherit" underline="hover" href="https://github.com/KD-43/pigeongamerv2">
                 Docs
               </Link>
-              <Link color="inherit" underline="hover" href="#">
+              <Link color="inherit" underline="hover" href="https://apidocs.cheapshark.com/">
                 API
               </Link>
             </Box>
@@ -63,7 +63,7 @@ export default function Footer() {
               <Link color="inherit" href="#">
                 X / Twitter
               </Link>
-              <Link color="inherit" href="#">
+              <Link color="inherit" href="https://github.com/KD-43">
                 GitHub
               </Link>
             </Box>
