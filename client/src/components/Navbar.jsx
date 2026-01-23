@@ -45,7 +45,7 @@ export default function Navbar({ }) {
 
           <Typography sx={{ mb: 2, }}>
             <Typography variant="h6" fontWeight={'900'} color="secondary.main">Powered by CheapShark</Typography>
-            All pricing, discounts, and search results come directly from the CheapShark API, which aggregates deals across multiple digital storefronts to surface the best available prices.
+            All pricing, discounts, and search results come directly from the CheapShark API, which aggregates deals across multiple digital storefronts to surface the best available prices. All deals can be accessed via redirect performed by CheapShark.
           </Typography>
 
           <Typography sx={{ mb: 2, }}>

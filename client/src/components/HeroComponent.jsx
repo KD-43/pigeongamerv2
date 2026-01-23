@@ -145,17 +145,17 @@ export default function HeroBase ({ deals = [], loading = false, error = null, i
                                     <Grid container size={6} spacing={1} sx={{}}>
                                         <Grid size={4} sx={{ }}>
                                             <Box sx={{ flexGrow: 0, display: "grid", height: 'min(100%, 37px)', placeItems: 'center', width: 'auto', borderRadius: '40px', borderColor: theme.palette.background.default, border: '2px solid', pt: '6px', pb: '3px', px: '16px', margin: 0 }}>
-                                                <Typography variant="body1" fontWeight={'bold'} fontSize={'clamp(0.5rem, 0.5vw, 1rem)'}>{storeName(storeID)}</Typography>
+                                                <Typography variant="body1" textAlign={'center'} textOverflow={'ellipsis'} whiteSpace={'nowrap'} fontWeight={'bold'} fontSize={'clamp(0.5rem, 0.5vw, 1rem)'} sx={{ overflow: 'hidden', width: '100%' }}>{storeName(storeID)}</Typography>
                                             </Box>
                                         </Grid>
                                         <Grid size={4} sx={{  }}>
                                             <Box sx={{ flexGrow: 0, height: 'min(100%, 37px)', display: 'grid', placeItems: 'center', width: 'auto', backgroundColor: theme.palette.background.default, border: `2px solid ${theme.palette.primary.main}`, borderRadius: '40px', pt: '6px', pb: '3px', px: '16px', margin: 0 }}>
-                                                <Typography variant="body1" color={theme.palette.primary.main} fontWeight={'bold'} fontSize={'clamp(0.5rem, 0.5vw, 1rem)'}>{freeOrNah(salePrice)}</Typography>
+                                                <Typography variant="body1" color={theme.palette.primary.main} fontWeight={'bold'} fontSize={'clamp(0.5rem, 1vw, 1rem)'}>{freeOrNah(salePrice)}</Typography>
                                             </Box>
                                         </Grid>
                                         <Grid size={4} sx={{  }}>
                                             <Box sx={{ flexGrow: 0, height: 'min(100%, 37px)', display: 'grid', placeItems: 'center', width: 'auto', backgroundColor: theme.palette.background.default, border: `2px solid ${theme.palette.secondary.main}`, borderRadius: '40px', pt: '6px', pb: '3px', px: '16px', margin: 0 }}>
-                                                <Typography variant="body1" color={theme.palette.secondary.main} fontWeight={'bold'} fontSize={'clamp(0.5rem, 0.5vw, 1rem)'}>{`${Math.floor(savings)}% Discount!`}</Typography>
+                                                <Typography variant="body1" color={theme.palette.secondary.main} fontWeight={'bold'} fontSize={'clamp(0.5rem, 1vw, 1rem)'}>{`${Math.floor(savings)}%`}</Typography>
                                             </Box>
                                         </Grid>
                                     </Grid>
