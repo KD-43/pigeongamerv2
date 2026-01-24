@@ -41,7 +41,7 @@ export const getSpecificWatchlist = async (req, res, next) => {
         }
 
         const now = new Date();
-        const DB_WRITE_TTL_MS = 60 * 1000;
+        const DB_WRITE_TTL_MS = 30 * 60 * 1000;
 
         const isStale = (d, staleMs) => {
             if (!d) return true;
@@ -73,7 +73,8 @@ export const getSpecificWatchlist = async (req, res, next) => {
                     currentPrice: Number.isFinite(cheapest.currentPrice) ? Number(cheapest.currentPrice) : null,
                     normalPrice: Number.isFinite(cheapest.normalPrice) ? Number(cheapest.normalPrice) : null,
                     redirectUrl: cheapest.redirectUrl ?? null,
-                    source: "service_cache_or_upstream",
+                    source: cheapest.cacheHit === true ? "service_cache" : "service_upstream",
+                    cacheHit: cheapest.cacheHit === true,
                 };
             } catch (err) {
                 console.error(`[cheapest] Error for "${item.title}":`, err.message);
@@ -101,7 +102,8 @@ export const getSpecificWatchlist = async (req, res, next) => {
                 : null;
             const isCadenceDue = isStale(item.lastSeenAt, DB_WRITE_TTL_MS);
             const hasValidPrice = Number.isFinite(currPrice);
-            if (isCadenceDue && hasValidPrice) {
+            const wasCacheHit = r.cacheHit === true;
+            if (isCadenceDue && hasValidPrice && !wasCacheHit) {
                 if (prevPrice === null || currPrice !== prevPrice) {
                     item.lastSeenPrice = currPrice;
                 };

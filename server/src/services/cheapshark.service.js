@@ -158,7 +158,7 @@ export async function getCheapestDealForTitle (title, signal, { forceRefresh = f
         const cached = getCache(key);
         if (cached) {
             console.log("[getCheapestDealForTitle] [2/2] cached result is true, returning cache: ", cached);
-            return cached;
+            return { ...cached, cacheHit: true };
         }
         if (!cached) console.log("[getCheapestDealForTitle] [2/2] cached result is false, moving to fetch from Cheapshark");
     }
@@ -186,6 +186,7 @@ export async function getCheapestDealForTitle (title, signal, { forceRefresh = f
         currentPrice: Number(best.salePrice),
         normalPrice: Number(best.normalPrice),
         redirectUrl: `https://www.cheapshark.com/redirect?dealID=${encodeURIComponent(best.dealID)}`,
+        cacheHit: false,
     };
 
     setCache(key, result, DEAL_CACHE_TTL);

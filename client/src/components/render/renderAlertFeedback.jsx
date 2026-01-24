@@ -1,4 +1,4 @@
-import { useEffect, } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert, Box, Slide } from '@mui/material';
 import FilledAlerts from '../util/alertFeedback';
 
@@ -24,18 +24,25 @@ export default function BottomCenterAlert({ open, onClose, severity, message, au
     // }, [ open, severity, message ])
 
     return (
-        <Slide direction="up" in={open} mountOnEnter unmountOnExit>
-            <Box sx={{
-                    position: 'fixed',
-                    bottom: 24,
-                    left: '45%',
-                    transform: 'translateX(-50%)',
-                    zIndex: (theme) => theme.zIndex.snackbar,
-                    maxWidth: '90vw',
-                }}
-            >
-                <FilledAlerts severity={severity} message={message} />
-            </Box>
-        </Slide>
+        <Box
+            sx={{
+                position: 'fixed',
+                bottom: 24,
+                left: '50%',
+                transform: 'translateX(-50%)',
+                zIndex: (theme) => theme.zIndex.snackbar,
+                width: '100%',
+                maxWidth: 520,
+                px: 2,
+                boxSizing: 'border-box',
+                pointerEvents: 'none',
+        }}
+        >
+            <Slide direction="up" in={open} mountOnEnter unmountOnExit>
+                <Box sx={{ pointerEvents: 'auto' }}>
+                    <FilledAlerts severity={severity} message={message} onClose={onClose} />
+                </Box>
+            </Slide>
+        </Box>
     );
 }
