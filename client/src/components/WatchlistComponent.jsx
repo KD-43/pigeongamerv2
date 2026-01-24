@@ -65,7 +65,7 @@ export default function Watchlist ({ title, items = [], actionLabel = 'View All'
         return (
             <Grid size={10} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', }}>
                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <Typography variant='h6' fontWeight={'900'} color='tertiary.main'>Deal for {game} is gone.</Typography>
+                    <Typography variant='h6' fontWeight={'900'} color='tertiary.main'>Deal for '{game}' is gone.</Typography>
                 </Box>
             </Grid>
         )

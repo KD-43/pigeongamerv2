@@ -74,7 +74,10 @@ export function DropdownButton({
 
         setIsAdding(true);
         try {
-            execute(id, payload);
+            const res = await execute(id, payload);
+            if (!res) {
+                alertFeedback('add', 'error');
+            }
             alertFeedback('add', 'success');
         } catch (err) {
             alertFeedback('add', 'error');

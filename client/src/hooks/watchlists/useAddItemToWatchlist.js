@@ -26,7 +26,7 @@ export function useAddItemToWatchlist () {
         } catch (err) {
             const message = err.response?.data?.error || err.message;
             setError(message);
-            throw err;
+            throw new Error(message);
         } finally {
             setIsLoading(false);
         }
