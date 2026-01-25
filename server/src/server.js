@@ -7,16 +7,24 @@ import errorHandler from "./middleware/errorHandler.js";
 import watchlistsRoutes from "./routes/watchlists.routes.js";
 import dealsRoutes from "./routes/deals.routes.js";
 
+if (process.env.NODE_ENV === "production") {
+  console.log = () => {};
+}
+
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT;
-const origin = process.env.ORIGIN;
+const port = process.env.PORT || 5001;
+const origin = process.env.CORS_ORIGIN;
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(
     cors({
         origin: origin,
+        credentials: true,
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization", "x-anon-id"],
     })
 );
 app.use(rateLimiter);
