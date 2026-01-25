@@ -1,8 +1,12 @@
 import axios from 'axios';
 import { getOrCreateUserId } from './userId';
 
+const baseURL = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/api`
+  : "/api";
+
 const api = axios.create({
-    baseURL: '/api',
+    baseURL: baseURL,
     timeout: 8000,
 });
 
