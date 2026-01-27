@@ -6,6 +6,7 @@ import rateLimiter from "./middleware/rateLimiter.js";
 import errorHandler from "./middleware/errorHandler.js";
 import watchlistsRoutes from "./routes/watchlists.routes.js";
 import dealsRoutes from "./routes/deals.routes.js";
+import healthRoutes from "./routes/health.routes.js";
 
 if (process.env.NODE_ENV === "production") {
   console.log = () => {};
@@ -27,6 +28,7 @@ app.use(
         allowedHeaders: ["Content-Type", "Authorization", "x-anon-id"],
     })
 );
+app.use(healthRoutes);
 app.use(rateLimiter);
 
 app.use((req, res, next) => {
