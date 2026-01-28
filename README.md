@@ -1,4 +1,4 @@
-# Game Deal Watchlist
+# PigeonGamer - Game Deals Tracker
 
 A full-stack web application that allows users to track video game deals using the CheapShark API. The app supports anonymous users, persistent watchlists, and cached pricing data to handle external API rate limits.
 
@@ -6,7 +6,7 @@ A full-stack web application that allows users to track video game deals using t
 - Frontend: React
 - Backend: Node.js, Express
 - Database: MongoDB
-- External API: CheapShark
+- External API: CheapShark API
 
 ## Features
 - Anonymous user tracking using UUIDs (no authentication required)
@@ -21,7 +21,7 @@ A full-stack web application that allows users to track video game deals using t
 - MongoDB used for persistent storage of users, watchlists, and deals
 
 ## Status
-Core functionality is complete. Notifications and deployment are planned next.
+Core functionality is complete. Notifications are planned next.
 
 ## Future Improvements
 - Price change notifications
