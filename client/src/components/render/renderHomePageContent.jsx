@@ -2,6 +2,8 @@ import { Bed, Error } from '@mui/icons-material';
 import { Box, Typography, Grid, useTheme } from '@mui/material';
 import RenderHeroContent from './renderHeroContent';
 import ListCardStack from '../ListCard';
+import SpecialFeature from '../specialFeatureComponent';
+import Searchbar from '../Searchbar';
 
 export default function RenderHomepageContent ({ payload }) {
     const theme = useTheme();
@@ -12,18 +14,18 @@ export default function RenderHomepageContent ({ payload }) {
     const { isWaking, wakeFailed } = warmup;
     
     if (isWaking) return (
-        <Box sx={{ py: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', maxHeight: '585.23px' }}>
+        <Box sx={{ py: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', maxHeight: '585.23px' }}>
             <Bed sx={{ width: '150px', height: 'auto', fill: theme.palette.primary.main, }} />
-            <Typography fontSize={50} fontWeight={900} textAlign={'center'}>
+            <Typography fontSize={25} fontWeight={900} textAlign={'center'}>
                 Waking up...
             </Typography>
         </Box>
     );
     
     if (wakeFailed) return (
-        <Box sx={{ py: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', maxHeight: '585.23px' }}>
+        <Box sx={{ py: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', maxHeight: '585.23px' }}>
             <Error sx={{ width: '150px', height: 'auto', fill: theme.palette.secondary.main, }} />
-            <Typography fontSize={50} fontWeight={900} textAlign={'center'}>
+            <Typography fontSize={25} fontWeight={900} textAlign={'center'}>
                 An Error occurred when launching. Please try again later.
             </Typography>
         </Box>
@@ -54,6 +56,17 @@ export default function RenderHomepageContent ({ payload }) {
                         itemsLoading={recentLoading}
                         itemsError={recentError}
                     />
+                </Grid>
+            </Grid>
+            <SpecialFeature />
+            <Grid container spacing={8} justifyContent={'space-between'} sx={{ my: '160px', }}>
+                <Grid size={6}>
+                    <Typography variant="h3" fontWeight={'900'} color={'primary'} textAlign={'end'}>
+                        Have a title in mind? <br /> Look for it!
+                    </Typography>
+                </Grid>
+                <Grid size={6} display={'flex'} alignItems={'center'}>
+                    <Searchbar bgColor={theme.palette.tertiary.main} width={'100%'}/>
                 </Grid>
             </Grid>
         </>

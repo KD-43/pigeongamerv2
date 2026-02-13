@@ -60,17 +60,6 @@ export default function HomePage () {
                         />
                     </Grid>
                 </Grid> */}
-                <SpecialFeature />
-                <Grid container spacing={8} justifyContent={'space-between'} sx={{ my: '160px', }}>
-                    <Grid size={6}>
-                        <Typography variant="h3" fontWeight={'900'} color={'primary'} textAlign={'end'}>
-                            Have a title in mind? <br /> Look for it!
-                        </Typography>
-                    </Grid>
-                    <Grid size={6} display={'flex'} alignItems={'center'}>
-                        <Searchbar bgColor={theme.palette.tertiary.main} width={'100%'}/>
-                    </Grid>
-                </Grid>
             </Container>
             <Footer />
         </>
