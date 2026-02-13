@@ -16,7 +16,7 @@ export default function RenderHomepageContent ({ payload }) {
     if (isWaking) return (
         <Box sx={{ py: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', maxHeight: '585.23px' }}>
             <Bed sx={{ width: '150px', height: 'auto', fill: theme.palette.primary.main, }} />
-            <Typography fontSize={25} fontWeight={900} textAlign={'center'}>
+            <Typography fontSize={25} fontWeight={900} textAlign={'center'} color={theme.palette.tertiary.main}>
                 Waking up...
             </Typography>
         </Box>
@@ -25,7 +25,7 @@ export default function RenderHomepageContent ({ payload }) {
     if (wakeFailed) return (
         <Box sx={{ py: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', maxHeight: '585.23px' }}>
             <Error sx={{ width: '150px', height: 'auto', fill: theme.palette.secondary.main, }} />
-            <Typography fontSize={25} fontWeight={900} textAlign={'center'}>
+            <Typography fontSize={25} fontWeight={900} textAlign={'center'} color={theme.palette.secondary.main}>
                 An Error occurred when launching. Please try again later.
             </Typography>
         </Box>
