@@ -12,19 +12,19 @@ export default function RenderHomepageContent ({ payload }) {
     const { isWaking, wakeFailed } = warmup;
     
     if (isWaking) return (
-        <Box sx={{ maxHeight: '585.23px' }}>
+        <Box sx={{ py: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', maxHeight: '585.23px' }}>
             <Bed sx={{ width: '150px', height: 'auto', fill: theme.palette.primary.main, }} />
-            <Typography fontSize={50} fontWeight={900}>
+            <Typography fontSize={50} fontWeight={900} textAlign={'center'}>
                 Waking up...
             </Typography>
         </Box>
     );
     
     if (wakeFailed) return (
-        <Box sx={{ maxHeight: '585.23px' }}>
+        <Box sx={{ py: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', maxHeight: '585.23px' }}>
             <Error sx={{ width: '150px', height: 'auto', fill: theme.palette.secondary.main, }} />
-            <Typography fontSize={50} fontWeight={900}>
-                Waking up...
+            <Typography fontSize={50} fontWeight={900} textAlign={'center'}>
+                An Error occurred when launching. Please try again later.
             </Typography>
         </Box>
     );
