@@ -11,8 +11,6 @@ import Searchbar from "../components/Searchbar";
 import Footer from "../components/FooterComponent";
 import HeroLoading from "../components/util/heroLoadingComponent.jsx";
 import RenderHeroContent from "../components/render/renderHeroContent.jsx";
-import { useAppWarmup } from "../hooks/appWarmup.js";
-import RenderHomepageContent from "../components/render/renderHomePageContent.jsx";
 
 export default function HomePage () {
     const theme = useTheme();
@@ -20,22 +18,14 @@ export default function HomePage () {
     const { heroDeals, loading: heroLoading, error: heroError, setHeroDeals } = useHeroDeals();
     const { recentDeals, loading: recentLoading, error: recentError, setRecentDeals } = useRecentDeals();
     const { trendingDeals, loading: trendingLoading, error: trendingError, setTrendingDeals } = useTrendingDeals();
-    const { isWaking, wakeFailed } = useAppWarmup();
 
     const heroDealsArr = heroDeals.dealsArr;
-    const homepageContentPayload = { 
-        hero: { heroDealsArr, heroLoading, heroError }, 
-        trending: { trendingDeals, trendingLoading, trendingError },
-        recent: { recentDeals, recentLoading, recentError },
-        warmup: { isWaking, wakeFailed }
-    };
 
     return (
         <>
             <Container sx={{ paddingTop: '56px' }}>
                 <Navbar />
-                <RenderHomepageContent payload={homepageContentPayload} />
-                {/* <RenderHeroContent dealsArr={heroDealsArr} interval={10000} loading={heroLoading} error={heroError} />
+                <RenderHeroContent dealsArr={heroDealsArr} interval={10000} loading={heroLoading} error={heroError} />
                 <Grid container spacing={3} sx={{  py: '56px' }}>
                     <Grid size={6} sx={{ maxHeight: '585.23px' }}>
                         <ListCardStack
@@ -59,7 +49,18 @@ export default function HomePage () {
                             itemsError={recentError}
                         />
                     </Grid>
-                </Grid> */}
+                </Grid>
+                <SpecialFeature />
+                <Grid container spacing={8} justifyContent={'space-between'} sx={{ my: '160px', }}>
+                    <Grid size={6}>
+                        <Typography variant="h3" fontWeight={'900'} color={'primary'} textAlign={'end'}>
+                            Have a title in mind? <br /> Look for it!
+                        </Typography>
+                    </Grid>
+                    <Grid size={6} display={'flex'} alignItems={'center'}>
+                        <Searchbar bgColor={theme.palette.tertiary.main} width={'100%'}/>
+                    </Grid>
+                </Grid>
             </Container>
             <Footer />
         </>
