@@ -30,7 +30,7 @@ export default function WarmupBanner({ status }) {
         >
             <img src={logo} width={96} height={96} />
             <Box sx={{ maxWidth: '600px', }}>
-                <Typography fontWeight={900} fontSize={24} textAlign={'center'}>{message}</Typography>
+                <Typography fontWeight={900} fontSize={18} textAlign={'center'}>{message}</Typography>
             </Box>
         </Box>
     );
