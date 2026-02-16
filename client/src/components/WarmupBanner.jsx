@@ -16,18 +16,19 @@ export default function WarmupBanner({ status }) {
             sx={{
                 display: 'flex',
                 alignItems: 'center',
+                justifyContent: 'center',
                 position: "sticky",
                 top: 0,
                 zIndex: 9999,
                 padding: "10px 12px",
                 borderBottom: `1px solid rgba(0,0,0,0.12)`,
-                background: theme.palette.background.default,
+                background: theme.palette.tertiary.main,
                 backdropFilter: "blur(6px)",
             }}
             role="status"
             aria-live="polite"
         >
-            <img src={logo} width={186} height={186} />
+            <img src={logo} width={96} height={96} />
             <Box sx={{ maxWidth: '600px', }}>
                 <Typography fontWeight={900} fontSize={24} textAlign={'center'}>{message}</Typography>
             </Box>
