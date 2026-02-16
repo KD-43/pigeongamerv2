@@ -20,6 +20,7 @@ export default function HomePage () {
     const { trendingDeals, loading: trendingLoading, error: trendingError, setTrendingDeals } = useTrendingDeals();
 
     const heroDealsArr = heroDeals.dealsArr;
+    const contentIsLoading = heroLoading || recentLoading || trendingLoading ? true : false;
 
     return (
         <>
@@ -50,7 +51,7 @@ export default function HomePage () {
                         />
                     </Grid>
                 </Grid>
-                <SpecialFeature />
+                <SpecialFeature status={contentIsLoading} />
                 <Grid container spacing={8} justifyContent={'space-between'} sx={{ my: '160px', }}>
                     <Grid size={6}>
                         <Typography variant="h3" fontWeight={'900'} color={'primary'} textAlign={'end'}>
