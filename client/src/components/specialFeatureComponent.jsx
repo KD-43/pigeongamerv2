@@ -67,7 +67,7 @@ export default function SpecialFeature ({ status }) {
                     </Box>
                 </Box>
 
-                <Button disabled={status} onClick={handleOpenDialog} variant='contained' size='large'>
+                <Button disabled={status ? true : false} onClick={handleOpenDialog} variant='contained' size='large'>
                     Create one
                 </Button>
             </Grid>
