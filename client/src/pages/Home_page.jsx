@@ -21,6 +21,8 @@ export default function HomePage () {
 
     const heroDealsArr = heroDeals.dealsArr;
     const contentIsLoading = heroLoading || recentLoading || trendingLoading;
+    const contentHasError = heroError || recentError || trendingError;
+    const statusOfContent = contentIsLoading === true || contentHasError === true;
 
     return (
         <>
@@ -51,7 +53,7 @@ export default function HomePage () {
                         />
                     </Grid>
                 </Grid>
-                <SpecialFeature status={contentIsLoading} />
+                <SpecialFeature status={statusOfContent} />
                 <Grid container spacing={8} justifyContent={'space-between'} sx={{ my: '160px', }}>
                     <Grid size={6}>
                         <Typography variant="h3" fontWeight={'900'} color={'primary'} textAlign={'end'}>

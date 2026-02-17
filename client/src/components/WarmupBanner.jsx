@@ -29,7 +29,7 @@ export default function WarmupBanner({ status }) {
             aria-live="polite"
         >
             <img src={logo} width={96} height={96} />
-            <Box sx={{ maxWidth: '400px', p: 2, }}>
+            <Box sx={{ maxWidth: '500px', p: 2, }}>
                 <Typography fontWeight={900} fontSize={18} textAlign={'center'}>{message}</Typography>
             </Box>
         </Box>
