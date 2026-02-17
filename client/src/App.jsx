@@ -9,6 +9,8 @@ import ViewMoreDeals from './pages/ViewMoreDeals_page';
 import ErrorPage from './pages/404_page';
 import { Routes, Route, useLocation, matchPath } from 'react-router';
 import ScrollToTop from './components/util/scrollToTop';
+import { useBackendWarmup } from './hooks/deals/useBackendWarmup';
+import WarmupBanner from './components/WarmupBanner';
 
 const routes = [
   { path: '/', title: 'Home', component: HomePage },
@@ -39,12 +41,14 @@ const findRoute = (fallback = "PigeonGamer") => {
 };
 
 const App = () => {
+  const warmupStatus = useBackendWarmup();
   findRoute();
 
   return (
     <Fragment>
       <CssBaseline />
         <ScrollToTop />
+        <WarmupBanner status={warmupStatus} />
         <Routes>
           {routes.map((route) => (
             <Route key={route.path} path={route.path} element={<route.component />} />

@@ -7,12 +7,13 @@ import { ShoppingBag, TrendingFlat, AutoAwesome } from '@mui/icons-material';
 import { CreateWatchlistDialog } from './util/dialogComponent';
 import { useCreateWatchlist } from '../hooks/watchlists/useCreateWatchlist';
 
-export default function SpecialFeature () {
+export default function SpecialFeature ({ status }) {
     const theme = useTheme();
     const [dialogOpen, setDialogOpen] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const navigate = useNavigate();
     const { execute, watchlist, loading, error } = useCreateWatchlist();
+    console.log("status:", status)
 
     const handleOpenDialog = () => setDialogOpen(true);
     const handleCloseDialog = () => {
@@ -66,7 +67,7 @@ export default function SpecialFeature () {
                     </Box>
                 </Box>
 
-                <Button onClick={handleOpenDialog} variant='contained' size='large'>
+                <Button disabled={status ? true : false} onClick={handleOpenDialog} variant='contained' size='large'>
                     Create one
                 </Button>
             </Grid>

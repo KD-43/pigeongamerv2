@@ -20,7 +20,12 @@ export default function HomePage () {
     const { trendingDeals, loading: trendingLoading, error: trendingError, setTrendingDeals } = useTrendingDeals();
 
     const heroDealsArr = heroDeals.dealsArr;
-
+    const contentIsLoading = heroLoading || recentLoading || trendingLoading;
+    const contentHasError = heroError || recentError || trendingError;
+    const loadingOrError = contentIsLoading === true || contentHasError === true
+    const contentIsNull = heroDeals.length === 0 || recentDeals.length === 0 || trendingDeals.length === 0;
+    const statusOfContent = loadingOrError || contentIsNull ? true : false;
+    
     return (
         <>
             <Container sx={{ paddingTop: '56px' }}>
@@ -50,7 +55,7 @@ export default function HomePage () {
                         />
                     </Grid>
                 </Grid>
-                <SpecialFeature />
+                <SpecialFeature status={statusOfContent} />
                 <Grid container spacing={8} justifyContent={'space-between'} sx={{ my: '160px', }}>
                     <Grid size={6}>
                         <Typography variant="h3" fontWeight={'900'} color={'primary'} textAlign={'end'}>
