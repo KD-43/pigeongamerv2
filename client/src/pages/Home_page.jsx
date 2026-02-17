@@ -22,8 +22,10 @@ export default function HomePage () {
     const heroDealsArr = heroDeals.dealsArr;
     const contentIsLoading = heroLoading || recentLoading || trendingLoading;
     const contentHasError = heroError || recentError || trendingError;
-    const statusOfContent = contentIsLoading === true || contentHasError === true;
-
+    const loadingOrError = contentIsLoading === true || contentHasError === true
+    const contentIsNull = heroDeals.length === 0 || recentDeals.length === 0 || trendingDeals.length === 0;
+    const statusOfContent = loadingOrError || contentIsNull ? true : false;
+    
     return (
         <>
             <Container sx={{ paddingTop: '56px' }}>

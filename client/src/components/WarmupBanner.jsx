@@ -22,7 +22,8 @@ export default function WarmupBanner({ status }) {
                 zIndex: 9999,
                 padding: "10px 12px",
                 borderBottom: `1px solid rgba(0,0,0,0.12)`,
-                background: theme.palette.tertiary.main,
+                background: theme.palette.black.default,
+                color: theme.palette.background.default,
                 backdropFilter: "blur(6px)",
             }}
             role="status"

@@ -13,6 +13,7 @@ export default function SpecialFeature ({ status }) {
     const [submitting, setSubmitting] = useState(false);
     const navigate = useNavigate();
     const { execute, watchlist, loading, error } = useCreateWatchlist();
+    console.log("status:", status)
 
     const handleOpenDialog = () => setDialogOpen(true);
     const handleCloseDialog = () => {
