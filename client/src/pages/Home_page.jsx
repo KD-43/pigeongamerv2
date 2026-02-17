@@ -20,7 +20,7 @@ export default function HomePage () {
     const { trendingDeals, loading: trendingLoading, error: trendingError, setTrendingDeals } = useTrendingDeals();
 
     const heroDealsArr = heroDeals.dealsArr;
-    const contentIsLoading = heroLoading || recentLoading || trendingLoading ? true : false;
+    const contentIsLoading = heroLoading || recentLoading || trendingLoading;
 
     return (
         <>
