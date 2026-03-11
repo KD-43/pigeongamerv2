@@ -31,7 +31,7 @@ export function useBackendWarmup() {
 
             for (let attempt = 0; attempt < 3; attempt++) {
                 try {
-                    const ok = await fetchWithTimeout(url, 30000);
+                    const ok = await fetchWithTimeout(url, 40000);
                     if (cancelled) return;
 
                     if (ok) {
