@@ -8,7 +8,7 @@ export default function WarmupBanner({ status }) {
 
     const message =
     status === "waking"
-        ? "Waking up the server… (Render free tier can take ~10–30s after inactivity)"
+        ? "Waking up the server… (Render free tier can take ~10–40s after inactivity)"
         : "Server is taking longer than expected. Data may load shortly.";
 
     return (
