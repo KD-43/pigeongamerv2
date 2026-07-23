@@ -11,7 +11,6 @@ A full-stack web application that allows users to track video game deals using t
 ## Features
 - Anonymous user tracking using UUIDs (no authentication required)
 - Create and manage multiple watchlists
-- Add and remove game deals from watchlists
 - Search games by title
 - Server-side caching with timed refresh to reduce API calls
 
