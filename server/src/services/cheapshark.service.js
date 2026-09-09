@@ -38,6 +38,25 @@ export async function getDeals (params, signal) {
         params: safeParams,
         signal,
     });
+
+    // let response;
+
+    // try {
+    //     response = await http.get('/deals', {
+    //         params: safeParams,
+    //         signal,
+    //     });
+    // } catch (error) {
+    //     console.error('[CHEAPSHARK ERROR]', {
+    //         status: error.response?.status,
+    //         data: error.response?.data,
+    //         url: error.config?.url,
+    //         baseURL: error.config?.baseURL,
+    //         params: error.config?.params,
+    //     });
+
+    //     throw error;
+    // }
     
     const data = response.data.map((deal) => ({
         ...deal,
